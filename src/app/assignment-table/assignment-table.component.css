@@ -1,6 +1,6 @@
 .wrapper {
   display: grid;
-  grid-template-columns: 200px repeat(calc(12*24), minmax(var(--grid-cell-minsize), 1fr));
+  grid-template-columns: 200px repeat(calc((60/var(--grid-cell-step))*24), minmax(var(--grid-cell-minsize), 1fr));
   grid-template-rows: repeat(1000, 50px);
 }
 
