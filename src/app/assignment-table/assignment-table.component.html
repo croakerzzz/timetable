@@ -1,0 +1,60 @@
+<div>
+  <button (click)="sub()">+</button>
+  <button (click)="add()">-</button>
+</div>
+<div class="wrapper">
+  <ng-container
+    *ngTemplateOutlet="scaleTitleRow;context:{row: 1}">
+  </ng-container>
+
+  <ng-container *ngFor="let section of sections; let sectionIndex = index;">
+<!--    <ng-container *ngTemplateOutlet="timeTableRowTitle;context:{title:section.name}"></ng-container>-->
+    <ng-container *ngFor="let assignment of getSectionAssignment(section.id); let assignmentIndex = index;">
+      <ng-container
+        *ngTemplateOutlet="timeTableRow;context:{row: getAssignmentRow(sectionIndex, assignmentIndex)}">
+      </ng-container>
+
+<!--      <ng-container *ngFor="let mark of assignment.marks">-->
+<!--        <div class="time-table-row-assignment-mark"-->
+<!--             (click)="log(getMarkStartColumn(mark) + ',' + getMarkEndColumn(mark))"-->
+<!--             [style.grid-row-start]="getAssignmentRow(sectionIndex, assignmentIndex)"-->
+<!--             [style.grid-row-end]="getAssignmentRow(sectionIndex, assignmentIndex)"-->
+<!--             [style.grid-column-start]="getMarkStartColumn(mark)"-->
+<!--             [style.grid-column-end]="getMarkEndColumn(mark)"-->
+<!--        >-->
+<!--        </div>-->
+<!--      </ng-container>-->
+
+    </ng-container>
+  </ng-container>
+
+  <ng-template #dynamic></ng-template>
+
+</div>
+
+<ng-template #timeTableRowTitle class="time-table-row" let-title="title">
+  <div class="time-table-row-title" [style.grid-column-start]="1" [style.grid-column-end]="289">{{title}}</div>
+</ng-template>
+
+<ng-template #timeTableRow let-row="row">
+  <div *ngFor="let timeCell of times; let i = index;" class="time-cell"
+       [style.grid-row-start]="row"
+       [style.grid-row-end]="row"
+       [style.grid-column-start]="i * stepCells + 2"
+       [style.grid-column-end]="(i + 1) * stepCells + 2"
+  >
+    <!--    <span style="font-size: 8px">{{i + 1}}</span>-->
+  </div>
+</ng-template>
+
+<ng-template #scaleTitleRow let-row="row">
+  <div *ngFor="let timeCell of times; let i = index;" class="time-cell"
+       [style.grid-row-start]="row"
+       [style.grid-row-end]="row"
+       [style.grid-column-start]="i * stepCells + 2"
+       [style.grid-column-end]="(i + 1) * stepCells + 2"
+  >
+    <span class="scale-title-row-cell">{{getScaleTitleRowName(i * stepCells)}}</span>
+  </div>
+</ng-template>
+
