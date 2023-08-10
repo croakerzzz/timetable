@@ -9,7 +9,6 @@ import {Assignment, TableSection} from "./assignment-table/common";
  * todo группы марок
  * todo подумать над оптимизацией пересоздания компонентов
  * todo разные компоненты для разных назначений (заголовки назначений и марки)
- * todo поправить баг с привязкой к ячейкам
  */
 class AppDataProvider extends DataProvider {
 
@@ -75,6 +74,10 @@ export class AppComponent implements OnInit {
           name: "Гелофузин р-р д/инф. 500 мл 500",
           isEdit: false,
           marks: [
+            {
+              offset: 25,
+              duration: 5
+            },
             {
               offset: 120,
               duration: 60

@@ -278,6 +278,8 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
 
     this.refresh();
 
+    this.draw();
+
     // console.log(this.currentStep);
   }
 
@@ -285,6 +287,8 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
     this.currentStep = this.currentStep === 0 ? 0 : this.currentStep - 1;
 
     this.refresh();
+
+    this.draw();
 
     // console.log(this.currentStep);
   }
@@ -307,12 +311,16 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
   }
 
   getMarkStartColumn(mark: Mark): number {
+    if (mark.offset === 25) {
+      console.log(Math.floor(mark.offset / this.steps[this.currentStep].markAlignMode));
+    }
+
     return Math.floor(mark.offset / this.steps[this.currentStep].markAlignMode) *
       (this.steps[this.currentStep].markAlignMode / this.gridCellStep) + 2;
   }
 
   getMarkEndColumn(mark: Mark): number {
-    return this.getMarkStartColumn(mark) + Math.floor(mark.duration / this.steps[this.currentStep].markAlignMode) *
+    return this.getMarkStartColumn(mark) + Math.ceil(mark.duration / this.steps[this.currentStep].markAlignMode) *
       (this.steps[this.currentStep].markAlignMode / this.gridCellStep);
   }
 
