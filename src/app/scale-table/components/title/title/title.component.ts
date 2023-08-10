@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {TitleTableComponent} from "../assignment-table/common";
-import {EventType} from "../assignment-table/data-provider";
+import {TitleTableComponent} from "../../../../assignment-table/common";
+import {EventType} from "../../../../assignment-table/data-provider";
 
 @Component({
   selector: 'app-title',

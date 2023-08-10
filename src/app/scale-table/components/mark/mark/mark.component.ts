@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {MarkTableComponent} from "../assignment-table/common";
+import {MarkTableComponent} from "../../../../assignment-table/common";
 import {filter} from "rxjs";
-import {CancelMark, EventType} from "../assignment-table/data-provider";
+import {CancelMark, EventType} from "../../../../assignment-table/data-provider";
 
 @Component({
     selector: 'app-mark',

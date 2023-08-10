@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {Assignment, AssignmentTableComponent} from "../assignment-table/common";
+import {Assignment, AssignmentTableComponent} from "../../../../assignment-table/common";
 
 @Component({
   selector: 'app-assignment',
