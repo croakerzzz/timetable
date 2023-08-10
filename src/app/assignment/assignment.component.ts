@@ -8,8 +8,6 @@ import {Assignment, AssignmentTableComponent} from "../assignment-table/common";
 })
 export class AssignmentComponent extends AssignmentTableComponent implements OnInit {
 
-  assignment!: Assignment;
-
   constructor(
     override el: ElementRef,
     override renderer: Renderer2
@@ -19,10 +17,6 @@ export class AssignmentComponent extends AssignmentTableComponent implements OnI
 
   ngOnInit(): void {
 
-  }
-
-  setAssigmentData(assignment: Assignment): void {
-    this.assignment = assignment;
   }
 
 }

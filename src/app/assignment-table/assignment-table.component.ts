@@ -311,9 +311,9 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
   }
 
   getMarkStartColumn(mark: Mark): number {
-    if (mark.offset === 25) {
-      console.log(Math.floor(mark.offset / this.steps[this.currentStep].markAlignMode));
-    }
+    // if (mark.offset === 25) {
+    //   console.log(Math.floor(mark.offset / this.steps[this.currentStep].markAlignMode));
+    // }
 
     return Math.floor(mark.offset / this.steps[this.currentStep].markAlignMode) *
       (this.steps[this.currentStep].markAlignMode / this.gridCellStep) + 2;
@@ -331,7 +331,13 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
   clickTimeCell(sectionId: string, timeCell: number) {
     console.log(this.gridCells[timeCell]);
 
-    this.dataProvider.clickTimeCell(sectionId, this.gridCells[timeCell].offset, this.gridCells[timeCell].title, this.steps[this.currentStep].minutes);
+    this.dataProvider.clickTimeCell(
+      "",
+      sectionId,
+      this.gridCells[timeCell].offset,
+      this.gridCells[timeCell].title,
+      this.steps[this.currentStep].minutes
+    );
   }
 
 }

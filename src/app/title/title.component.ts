@@ -1,5 +1,6 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {TableSection, TitleTableComponent} from "../assignment-table/common";
+import {TitleTableComponent} from "../assignment-table/common";
+import {EventType} from "../assignment-table/data-provider";
 
 @Component({
   selector: 'app-title',
@@ -7,8 +8,6 @@ import {TableSection, TitleTableComponent} from "../assignment-table/common";
   styleUrls: ['./title.component.css']
 })
 export class TitleComponent extends TitleTableComponent implements OnInit {
-
-  tableSection!: TableSection;
 
   createButtonDisabled = false;
 
@@ -22,8 +21,8 @@ export class TitleComponent extends TitleTableComponent implements OnInit {
   ngOnInit(): void {
 
     this.dataProvider.events.subscribe(event => {
-      switch (event.name) {
-        case 'createRow': {
+      switch (event.type) {
+        case EventType.CREATE_ROW: {
           this.createButtonDisabled = true;
           break;
         }
@@ -32,11 +31,7 @@ export class TitleComponent extends TitleTableComponent implements OnInit {
 
   }
 
-  setTableSection(tableSection$: TableSection): void {
-    this.tableSection = tableSection$;
-  }
-
   add() {
-    this.dataProvider.addRow(this.tableSection.id);
+    this.dataProvider.addRow(this.generateEventId(), this.tableSection.id);
   }
 }

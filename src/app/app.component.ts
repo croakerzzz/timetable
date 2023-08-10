@@ -24,21 +24,22 @@ class AppDataProvider extends DataProvider {
     return this.sections;
   }
 
-  override addRow(sectionId: string) {
+  override addRow(id: string, sectionId: string) {
     const section = this.sections.find(s => s.id === sectionId);
 
     if (section) {
       section.assignments.unshift({
+        id: '',
         name: '',
         isEdit: true,
         marks: []
       })
     }
 
-    super.addRow(sectionId);
+    super.addRow(id, sectionId);
   }
 
-  override clickTimeCell(sectionId: string, offset: number, time: string, step: number) {
+  override clickTimeCell(id: string, sectionId: string, offset: number, time: string, step: number) {
     const section = this.sections.find(s => s.id === sectionId);
 
     const assigment = section?.assignments.find(a => a.isEdit);
@@ -50,7 +51,7 @@ class AppDataProvider extends DataProvider {
       });
     }
 
-    super.clickTimeCell(sectionId, offset, time, step);
+    super.clickTimeCell(id, sectionId, offset, time, step);
   }
 
 }
@@ -71,6 +72,7 @@ export class AppComponent implements OnInit {
       assignmentComponent: AssignmentComponent,
       assignments: [
         {
+          id: "1",
           name: "Гелофузин р-р д/инф. 500 мл 500",
           isEdit: false,
           marks: [
@@ -94,6 +96,7 @@ export class AppComponent implements OnInit {
       assignmentComponent: AssignmentComponent,
       assignments: [
         {
+          id: "2",
           name: "Конфокальная микроскопия роговицы",
           isEdit: false,
           marks: [
@@ -104,6 +107,7 @@ export class AppComponent implements OnInit {
           ]
         },
         {
+          id: "3",
           name: "Конфокальная микроскопия роговицы",
           isEdit: false,
           marks: [
@@ -123,6 +127,7 @@ export class AppComponent implements OnInit {
       assignmentComponent: AssignmentComponent,
       assignments: [
         {
+          id: "4",
           name: "Конфокальная микроскопия роговицы",
           isEdit: false,
           marks: [
@@ -154,6 +159,7 @@ export class AppComponent implements OnInit {
       assignmentComponent: AssignmentComponent,
       assignments: [
         {
+          id: "5",
           name: "Что то там",
           isEdit: false,
           marks: [

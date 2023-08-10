@@ -2,15 +2,25 @@ import {ElementRef, Renderer2, Type} from "@angular/core";
 import {DataProvider} from "./data-provider";
 
 export interface Mark {
-  offset: number,
-  duration: number,
-  marks?: Mark[]
+
+  offset: number;
+
+  duration: number;
+
+  marks?: Mark[];
+
 }
 
 export interface Assignment {
-  name: string
+
+  id: string;
+
+  name: string;
+
   isEdit: boolean;
-  marks: Mark[],
+
+  marks: Mark[];
+
 }
 
 export interface TableSection {
@@ -67,9 +77,13 @@ export abstract class TableComponent {
     this.dataProvider = dataProvider;
   }
 
+  abstract generateEventId(): string;
+
 }
 
 export abstract class TitleTableComponent extends TableComponent {
+
+  tableSection!: TableSection;
 
   constructor(
     override el: ElementRef,
@@ -78,12 +92,20 @@ export abstract class TitleTableComponent extends TableComponent {
     super(el, renderer);
   }
 
-  abstract setTableSection(tableSection: TableSection): void;
+  setTableSection(tableSection: TableSection): void {
+    this.tableSection = tableSection;
+  }
+
+  override generateEventId(): string {
+    return "titleTable#" + this.tableSection.id;
+  }
 
 }
 
 export abstract class MarkTableComponent extends TableComponent {
 
+  mark!: Mark;
+
   constructor(
     override el: ElementRef,
     override renderer: Renderer2
@@ -91,12 +113,20 @@ export abstract class MarkTableComponent extends TableComponent {
     super(el, renderer);
   }
 
-  abstract setMarkData(mark: Mark): void;
+  setMarkData(mark: Mark): void {
+    this.mark = mark;
+  }
+
+  override generateEventId(): string {
+    return "markTable#" + this.mark.offset + "#" + this.mark.duration;
+  }
 
 }
 
 export abstract class AssignmentTableComponent extends TableComponent {
 
+  assignment!: Assignment;
+
   constructor(
     override el: ElementRef,
     override renderer: Renderer2
@@ -104,6 +134,12 @@ export abstract class AssignmentTableComponent extends TableComponent {
     super(el, renderer);
   }
 
-  abstract setAssigmentData(assignment: Assignment): void;
+  setAssigmentData(assignment: Assignment): void {
+    this.assignment = assignment;
+  }
+
+  override generateEventId(): string {
+    return "assignmentTable#" + this.assignment.id;
+  }
 
 }

@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {Mark, MarkTableComponent} from "../assignment-table/common";
+import {MarkTableComponent} from "../assignment-table/common";
 
 @Component({
   selector: 'app-mark',
@@ -16,9 +16,10 @@ export class MarkComponent extends MarkTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
 
-  setMarkData(mark: Mark): void {
+    this.dataProvider.events.subscribe(event => {
+
+    });
 
   }
 

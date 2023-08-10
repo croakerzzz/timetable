@@ -27,4 +27,10 @@ export class DynamicComponent extends TableComponent implements OnInit {
     this.customEvent.emit();
   }
 
+  generateEventId(): string {
+    return "";
+  }
+
+
+
 }
