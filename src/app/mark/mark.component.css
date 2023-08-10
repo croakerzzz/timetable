@@ -1,4 +1,7 @@
 .time-table-row-assignment-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: blue solid 2px;
   border-radius: 8px;
   z-index: 10;

@@ -3,9 +3,13 @@ import {DataProvider} from "./data-provider";
 
 export interface Mark {
 
+  id: string;
+
   offset: number;
 
   duration: number;
+
+  canceled: boolean;
 
   marks?: Mark[];
 
