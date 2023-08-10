@@ -10,7 +10,8 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {toNumber} from "ng-zorro-antd/core/util";
-import {Assignment, Mark, TableSection} from "./common";
+import {Assignment, Mark} from "./common";
+import {DataProvider} from "./data-provider";
 
 interface GridCell {
   offset: number,
@@ -32,7 +33,7 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
 
   // todo сделать объект с настройками всей таблицы
   @Input()
-  sections!: TableSection[];
+  dataProvider!: DataProvider;
 
   @HostBinding("style.--grid-cell-minsize") gridCellMinSize: string = '1px';
 
@@ -74,7 +75,7 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
 
   stepCells = this.steps[this.currentStep].minutes / this.gridCellStep;
 
-  @ViewChild('dynamic', { read: ViewContainerRef })
+  @ViewChild('dynamic', {read: ViewContainerRef})
   private viewRef?: ViewContainerRef;
 
   constructor(
@@ -83,30 +84,22 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
   ) {
   }
 
-  ngOnInit(): void {
-    // this.host.nativeElement.style.setProperty('--timetable-column','3');
-
-    this.refresh();
-
-    console.log(this.times.length);
-
-  }
-
-  ngAfterViewInit(): void {
+  draw(): void {
     this.viewRef?.clear();
-    console.log(this.viewRef);
+    // console.log(this.viewRef);
 
     let row = 2;
 
-    for (let sectionIndex = 0; sectionIndex < this.sections.length; sectionIndex++) {
+    for (let sectionIndex = 0; sectionIndex < this.dataProvider.getSections().length; sectionIndex++) {
 
-      const titleComponentRef = this.viewRef?.createComponent(this.sections[sectionIndex].titleComponent);
+      const titleComponentRef =
+        this.viewRef?.createComponent(this.dataProvider.getSections()[sectionIndex].titleComponent);
 
       if (titleComponentRef) {
 
         const titleComponent = titleComponentRef.instance;
 
-        titleComponent.setInitData({
+        titleComponent.position({
           gridRowStart: row,
           gridRowEnd: row,
           gridColumnStart: 1,
@@ -114,28 +107,57 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
           zIndex: 1
         });
 
-        titleComponent.setTableSection(this.sections[sectionIndex]);
+        titleComponent.setDataProvider(this.dataProvider);
+
+        titleComponent.setTableSection(this.dataProvider.getSections()[sectionIndex]);
 
         row++;
 
-        for (let assignmentIndex = 0; assignmentIndex < this.getSectionAssignment(this.sections[sectionIndex].id).length; assignmentIndex++) {
+        for (let assignmentIndex = 0;
+             assignmentIndex < this.getSectionAssignment(this.dataProvider.getSections()[sectionIndex].id).length;
+             assignmentIndex++) {
 
-          for (let markIndex = 0; markIndex < this.sections[sectionIndex].assignments[assignmentIndex].marks.length; markIndex++) {
+          const assignmentComponentRef =
+            this.viewRef?.createComponent(this.dataProvider.getSections()[sectionIndex].assignmentComponent);
 
-            const markComponentRef = this.viewRef?.createComponent(this.sections[sectionIndex].markComponent);
+          if (assignmentComponentRef) {
+            const assignmentComponent = assignmentComponentRef.instance;
+
+            assignmentComponent.position({
+              gridRowStart: row,
+              gridRowEnd: row,
+              gridColumnStart: 1,
+              gridColumnEnd: 1,
+              zIndex: 1
+            });
+
+            assignmentComponent.setDataProvider(this.dataProvider);
+
+            assignmentComponent.setAssigmentData(this.getSectionAssignment(this.dataProvider.getSections()[sectionIndex].id)[assignmentIndex]);
+
+          }
+
+          for (let markIndex = 0;
+               markIndex < this.getSectionAssignment(this.dataProvider.getSections()[sectionIndex].id)[assignmentIndex].marks.length;
+               markIndex++) {
+
+            const markComponentRef =
+              this.viewRef?.createComponent(this.dataProvider.getSections()[sectionIndex].markComponent);
 
             if (markComponentRef) {
               const markComponent = markComponentRef.instance;
 
-              const mark = this.sections[sectionIndex].assignments[assignmentIndex].marks[markIndex];
+              const mark = this.getSectionAssignment(this.dataProvider.getSections()[sectionIndex].id)[assignmentIndex].marks[markIndex];
 
-              markComponent.setInitData({
+              markComponent.position({
                 gridRowStart: row,
                 gridRowEnd: row,
                 gridColumnStart: this.getMarkStartColumn(mark),
                 gridColumnEnd: this.getMarkEndColumn(mark),
                 zIndex: 10
               });
+
+              markComponent.setDataProvider(this.dataProvider);
 
               markComponent.setMarkData(mark);
             }
@@ -149,6 +171,26 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
     }
 
     this.cdRef.detectChanges();
+  }
+
+  ngOnInit(): void {
+    // this.host.nativeElement.style.setProperty('--timetable-column','3');
+
+    this.refresh();
+
+    // console.log(this.times.length);
+
+    this.dataProvider.events.subscribe(event => {
+      console.log('event', event);
+
+      this.draw();
+    });
+
+  }
+
+  ngAfterViewInit(): void {
+
+    this.draw();
 
     // const componentRef = this.viewRef?.createComponent(DynamicComponent);
     // console.log(componentRef);
@@ -174,7 +216,7 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
   refresh(): void {
     let date = new Date();
     date.setHours(toNumber(this.zeroTime.split(":")[0]), toNumber(this.zeroTime.split(":")[1]), 0, 0);
-    for (let i = 0; i < (60/this.gridCellStep) * 24; i++) {
+    for (let i = 0; i < (60 / this.gridCellStep) * 24; i++) {
       this.gridCells.push({offset: i * this.gridCellStep, title: date.toTimeString().substring(0, 5)});
       date.setMinutes(date.getMinutes() + this.gridCellStep);
     }
@@ -197,7 +239,7 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
   }
 
   getSectionAssignment(sectionId: string): Assignment[] {
-    return this.sections.find(s => s.id === sectionId)?.assignments || [];
+    return this.dataProvider.getAssignment(sectionId);
   }
 
   add() {
@@ -205,7 +247,7 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
 
     this.refresh();
 
-    console.log(this.currentStep);
+    // console.log(this.currentStep);
   }
 
   sub() {
@@ -213,7 +255,7 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
 
     this.refresh();
 
-    console.log(this.currentStep);
+    // console.log(this.currentStep);
   }
 
   getAssignmentRow(sectionIndex: number, assignmentIndex: number): number {
@@ -225,10 +267,10 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
     let result = 1;
 
     for (let i = 0; i < currentIndex; i++) {
-      result += this.getSectionAssignment(this.sections[i].id).length + 1;
+      result += this.getSectionAssignment(this.dataProvider.getSections()[i].id).length + 1;
     }
 
-    console.log('prev', result);
+    // console.log('prev', result);
 
     return result;
   }
@@ -243,9 +285,14 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
       (this.steps[this.currentStep].markAlignMode / this.gridCellStep);
   }
 
-  protected readonly console = console;
-
   log(s: string) {
     console.log(s);
   }
+
+  clickTimeCell(sectionId: string, timeCell: number) {
+    console.log(this.gridCells[timeCell]);
+
+    this.dataProvider.clickTimeCell(sectionId, this.gridCells[timeCell].offset, this.gridCells[timeCell].title, this.steps[this.currentStep].minutes);
+  }
+
 }

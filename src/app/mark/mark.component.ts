@@ -22,4 +22,7 @@ export class MarkComponent extends MarkTableComponent implements OnInit {
 
   }
 
+  click() {
+    console.log(123);
+  }
 }

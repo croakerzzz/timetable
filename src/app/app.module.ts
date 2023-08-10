@@ -10,6 +10,8 @@ import {AssignmentTableComponent} from './assignment-table/assignment-table.comp
 import { DynamicComponent } from './dynamic/dynamic.component';
 import { TitleComponent } from './title/title.component';
 import { MarkComponent } from './mark/mark.component';
+import {ReactiveComponentModule} from "@ngrx/component";
+import { AssignmentComponent } from './assignment/assignment.component';
 
 @NgModule({
   declarations: [
@@ -18,14 +20,16 @@ import { MarkComponent } from './mark/mark.component';
     DynamicComponent,
     TitleComponent,
     MarkComponent,
+    AssignmentComponent,
   ],
-  imports: [
-    BrowserModule,
-    NzDropDownModule,
-    BrowserAnimationsModule,
-    NzIconModule,
-    HttpClientModule
-  ],
+    imports: [
+        BrowserModule,
+        NzDropDownModule,
+        BrowserAnimationsModule,
+        NzIconModule,
+        HttpClientModule,
+        ReactiveComponentModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

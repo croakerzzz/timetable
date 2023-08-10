@@ -1,5 +1,5 @@
 .time-table-row-assignment-mark {
-  border: blue solid thin;
+  border: blue solid 2px;
   border-radius: 8px;
   z-index: 10;
   height: 50px;

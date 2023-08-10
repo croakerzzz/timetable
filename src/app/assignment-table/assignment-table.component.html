@@ -7,11 +7,11 @@
     *ngTemplateOutlet="scaleTitleRow;context:{row: 1}">
   </ng-container>
 
-  <ng-container *ngFor="let section of sections; let sectionIndex = index;">
+  <ng-container *ngFor="let section of dataProvider.getSections(); let sectionIndex = index;">
 <!--    <ng-container *ngTemplateOutlet="timeTableRowTitle;context:{title:section.name}"></ng-container>-->
     <ng-container *ngFor="let assignment of getSectionAssignment(section.id); let assignmentIndex = index;">
       <ng-container
-        *ngTemplateOutlet="timeTableRow;context:{row: getAssignmentRow(sectionIndex, assignmentIndex)}">
+        *ngTemplateOutlet="timeTableRow;context:{row: getAssignmentRow(sectionIndex, assignmentIndex), sectionId:section.id}">
       </ng-container>
 
 <!--      <ng-container *ngFor="let mark of assignment.marks">-->
@@ -36,8 +36,8 @@
   <div class="time-table-row-title" [style.grid-column-start]="1" [style.grid-column-end]="289">{{title}}</div>
 </ng-template>
 
-<ng-template #timeTableRow let-row="row">
-  <div *ngFor="let timeCell of times; let i = index;" class="time-cell"
+<ng-template #timeTableRow let-row="row" let-sectionId="sectionId">
+  <div *ngFor="let timeCell of times; let i = index;" class="time-cell" (click)="clickTimeCell(sectionId, i * stepCells)"
        [style.grid-row-start]="row"
        [style.grid-row-end]="row"
        [style.grid-column-start]="i * stepCells + 2"

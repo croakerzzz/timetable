@@ -1,3 +1,4 @@
 <div class="time-table-row-title">
-  <p>{{name}}</p>
+  <button [disabled]="createButtonDisabled" (click)="add()">+</button>
+  <p>{{tableSection.name}}</p>
 </div>

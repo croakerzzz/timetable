@@ -8,7 +8,9 @@ import {TableSection, TitleTableComponent} from "../assignment-table/common";
 })
 export class TitleComponent extends TitleTableComponent implements OnInit {
 
-  name!: string;
+  tableSection!: TableSection;
+
+  createButtonDisabled = false;
 
   constructor(
     override el: ElementRef,
@@ -19,10 +21,22 @@ export class TitleComponent extends TitleTableComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.dataProvider.events.subscribe(event => {
+      switch (event.name) {
+        case 'createRow': {
+          this.createButtonDisabled = true;
+          break;
+        }
+      }
+    });
+
   }
 
-  setTableSection(tableSection: TableSection): void {
-    this.name = tableSection.name;
+  setTableSection(tableSection$: TableSection): void {
+    this.tableSection = tableSection$;
   }
 
+  add() {
+    this.dataProvider.addRow(this.tableSection.id);
+  }
 }
