@@ -1,6 +1,10 @@
 import {ElementRef, Renderer2, Type} from "@angular/core";
 import {DataProvider} from "./data-provider";
-import {Assignment, Mark, TableSection} from "./section";
+
+export interface Mark {
+  offset: number,
+  duration: number,
+}
 
 export abstract class TableComponent {
 
@@ -78,5 +82,27 @@ export interface TableComponentInitData {
   gridColumnEnd: number;
 
   zIndex: number;
+
+}
+
+export interface Assignment {
+  name: string
+  isEdit: boolean;
+  marks: Mark[],
+}
+
+export interface TableSection {
+
+  id: string;
+
+  name: string;
+
+  titleComponent: Type<TitleTableComponent>;
+
+  markComponent: Type<MarkTableComponent>;
+
+  assignmentComponent: Type<AssignmentTableComponent>;
+
+  assignments: Assignment[];
 
 }

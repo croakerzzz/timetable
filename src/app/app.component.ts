@@ -3,7 +3,7 @@ import {TitleComponent} from "./title/title.component";
 import {MarkComponent} from "./mark/mark.component";
 import {DataProvider} from "./assignment-table/data-provider";
 import {AssignmentComponent} from "./assignment/assignment.component";
-import {Assignment, TableSection} from "./assignment-table/section";
+import {Assignment, TableSection} from "./assignment-table/common";
 
 class AppDataProvider extends DataProvider {
 
