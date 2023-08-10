@@ -5,6 +5,12 @@ import {DataProvider} from "./assignment-table/data-provider";
 import {AssignmentComponent} from "./assignment/assignment.component";
 import {Assignment, TableSection} from "./assignment-table/common";
 
+/**
+ * todo группы марок
+ * todo подумать над оптимизацией пересоздания компонентов
+ * todo разные компоненты для разных назначений (заголовки назначений и марки)
+ * todo поправить баг с привязкой к ячейкам
+ */
 class AppDataProvider extends DataProvider {
 
   constructor(private sections: TableSection[]) {
@@ -143,7 +149,32 @@ export class AppComponent implements OnInit {
       titleComponent: TitleComponent,
       markComponent: MarkComponent,
       assignmentComponent: AssignmentComponent,
-      assignments: []
+      assignments: [
+        {
+          name: "Что то там",
+          isEdit: false,
+          marks: [
+            {
+              offset: 120,
+              duration: 120,
+              marks: [
+                {
+                  offset: 120,
+                  duration: 30
+                },
+                {
+                  offset: 150,
+                  duration: 30
+                },
+                {
+                  offset: 180,
+                  duration: 60
+                },
+              ]
+            }
+          ]
+        }
+      ]
     },
   ]
 

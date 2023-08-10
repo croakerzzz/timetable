@@ -4,6 +4,43 @@ import {DataProvider} from "./data-provider";
 export interface Mark {
   offset: number,
   duration: number,
+  marks?: Mark[]
+}
+
+export interface Assignment {
+  name: string
+  isEdit: boolean;
+  marks: Mark[],
+}
+
+export interface TableSection {
+
+  id: string;
+
+  name: string;
+
+  titleComponent: Type<TitleTableComponent>;
+
+  markComponent: Type<MarkTableComponent>;
+
+  assignmentComponent: Type<AssignmentTableComponent>;
+
+  assignments: Assignment[];
+
+}
+
+export interface TableComponentInitData {
+
+  gridRowStart: number;
+
+  gridRowEnd: number;
+
+  gridColumnStart: number;
+
+  gridColumnEnd: number;
+
+  zIndex: number;
+
 }
 
 export abstract class TableComponent {
@@ -68,41 +105,5 @@ export abstract class AssignmentTableComponent extends TableComponent {
   }
 
   abstract setAssigmentData(assignment: Assignment): void;
-
-}
-
-export interface TableComponentInitData {
-
-  gridRowStart: number;
-
-  gridRowEnd: number;
-
-  gridColumnStart: number;
-
-  gridColumnEnd: number;
-
-  zIndex: number;
-
-}
-
-export interface Assignment {
-  name: string
-  isEdit: boolean;
-  marks: Mark[],
-}
-
-export interface TableSection {
-
-  id: string;
-
-  name: string;
-
-  titleComponent: Type<TitleTableComponent>;
-
-  markComponent: Type<MarkTableComponent>;
-
-  assignmentComponent: Type<AssignmentTableComponent>;
-
-  assignments: Assignment[];
 
 }

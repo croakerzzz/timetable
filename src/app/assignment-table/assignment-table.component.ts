@@ -6,11 +6,12 @@ import {
   HostBinding,
   Input,
   OnInit,
+  Type,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
 import {toNumber} from "ng-zorro-antd/core/util";
-import {Assignment, Mark} from "./common";
+import {Assignment, Mark, MarkTableComponent} from "./common";
 import {DataProvider} from "./data-provider";
 
 interface GridCell {
@@ -31,7 +32,6 @@ interface Step {
 })
 export class AssignmentTableComponent implements OnInit, AfterViewInit {
 
-  // todo сделать объект с настройками всей таблицы
   @Input()
   dataProvider!: DataProvider;
 
@@ -82,6 +82,27 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
     private host: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef,
   ) {
+  }
+
+  drawMark(markComponent: Type<MarkTableComponent>, mark: Mark, row: number) {
+    const markComponentRef =
+      this.viewRef?.createComponent(markComponent);
+
+    if (markComponentRef) {
+      const markComponent = markComponentRef.instance;
+
+      markComponent.position({
+        gridRowStart: row,
+        gridRowEnd: row,
+        gridColumnStart: this.getMarkStartColumn(mark),
+        gridColumnEnd: this.getMarkEndColumn(mark),
+        zIndex: 10
+      });
+
+      markComponent.setDataProvider(this.dataProvider);
+
+      markComponent.setMarkData(mark);
+    }
   }
 
   draw(): void {
@@ -141,26 +162,36 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
                markIndex < this.getSectionAssignment(this.dataProvider.getSections()[sectionIndex].id)[assignmentIndex].marks.length;
                markIndex++) {
 
-            const markComponentRef =
-              this.viewRef?.createComponent(this.dataProvider.getSections()[sectionIndex].markComponent);
+            const mark = this.getSectionAssignment(this.dataProvider.getSections()[sectionIndex].id)[assignmentIndex].marks[markIndex];
 
-            if (markComponentRef) {
-              const markComponent = markComponentRef.instance;
+            if (mark.marks && mark.marks.length > 0) {
 
-              const mark = this.getSectionAssignment(this.dataProvider.getSections()[sectionIndex].id)[assignmentIndex].marks[markIndex];
+              for (let subMarkIndex = 0; subMarkIndex < mark.marks.length; subMarkIndex++) {
+                this.drawMark(this.dataProvider.getSections()[sectionIndex].markComponent, mark.marks[subMarkIndex], row);
+              }
 
-              markComponent.position({
-                gridRowStart: row,
-                gridRowEnd: row,
-                gridColumnStart: this.getMarkStartColumn(mark),
-                gridColumnEnd: this.getMarkEndColumn(mark),
-                zIndex: 10
-              });
-
-              markComponent.setDataProvider(this.dataProvider);
-
-              markComponent.setMarkData(mark);
+            } else {
+              this.drawMark(this.dataProvider.getSections()[sectionIndex].markComponent, mark, row);
             }
+
+            // const markComponentRef =
+            //   this.viewRef?.createComponent(this.dataProvider.getSections()[sectionIndex].markComponent);
+            //
+            // if (markComponentRef) {
+            //   const markComponent = markComponentRef.instance;
+            //
+            //   markComponent.position({
+            //     gridRowStart: row,
+            //     gridRowEnd: row,
+            //     gridColumnStart: this.getMarkStartColumn(mark),
+            //     gridColumnEnd: this.getMarkEndColumn(mark),
+            //     zIndex: 10
+            //   });
+            //
+            //   markComponent.setDataProvider(this.dataProvider);
+            //
+            //   markComponent.setMarkData(mark);
+            // }
 
           }
 
