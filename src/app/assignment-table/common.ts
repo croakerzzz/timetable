@@ -3,147 +3,147 @@ import {DataProvider} from "./data-provider";
 
 export interface Mark {
 
-  id: string;
+    id: string;
 
-  offset: number;
+    offset: number;
 
-  duration: number;
+    duration: number;
 
-  canceled: boolean;
+    canceled: boolean;
 
-  marks?: Mark[];
+    marks?: Mark[];
 
 }
 
 export interface Assignment {
 
-  id: string;
+    id: string;
 
-  name: string;
+    name: string;
 
-  isEdit: boolean;
+    isEdit: boolean;
 
-  marks: Mark[];
+    marks: Mark[];
 
 }
 
 export interface TableSection {
 
-  id: string;
+    id: string;
 
-  name: string;
+    name: string;
 
-  titleComponent: Type<TitleTableComponent>;
+    titleComponent: Type<TitleTableComponent>;
 
-  markComponent: Type<MarkTableComponent>;
+    markComponent: Type<MarkTableComponent>;
 
-  assignmentComponent: Type<AssignmentTableComponent>;
+    assignmentComponent: Type<AssignmentTableComponent>;
 
-  assignments: Assignment[];
+    assignments: Assignment[];
 
 }
 
 export interface TableComponentInitData {
 
-  gridRowStart: number;
+    gridRowStart: number;
 
-  gridRowEnd: number;
+    gridRowEnd: number;
 
-  gridColumnStart: number;
+    gridColumnStart: number;
 
-  gridColumnEnd: number;
+    gridColumnEnd: number;
 
-  zIndex: number;
+    zIndex: number;
 
 }
 
 export abstract class TableComponent {
 
-  protected dataProvider!: DataProvider;
+    protected dataProvider!: DataProvider;
 
-  constructor(
-    protected el: ElementRef,
-    protected renderer: Renderer2
-  ) {
-  }
+    constructor(
+        protected el: ElementRef,
+        protected renderer: Renderer2
+    ) {
+    }
 
-  public position(data: TableComponentInitData): void {
+    public position(data: TableComponentInitData): void {
 
-    this.renderer.setStyle(this.el.nativeElement, 'grid-row-start', data.gridRowStart);
-    this.renderer.setStyle(this.el.nativeElement, 'grid-row-end', data.gridRowEnd);
-    this.renderer.setStyle(this.el.nativeElement, 'grid-column-start', data.gridColumnStart);
-    this.renderer.setStyle(this.el.nativeElement, 'grid-column-end', data.gridColumnEnd);
-    this.renderer.setStyle(this.el.nativeElement, 'z-index', data.zIndex);
+        this.renderer.setStyle(this.el.nativeElement, 'grid-row-start', data.gridRowStart);
+        this.renderer.setStyle(this.el.nativeElement, 'grid-row-end', data.gridRowEnd);
+        this.renderer.setStyle(this.el.nativeElement, 'grid-column-start', data.gridColumnStart);
+        this.renderer.setStyle(this.el.nativeElement, 'grid-column-end', data.gridColumnEnd);
+        this.renderer.setStyle(this.el.nativeElement, 'z-index', data.zIndex);
 
-  }
+    }
 
-  setDataProvider(dataProvider: DataProvider) {
-    this.dataProvider = dataProvider;
-  }
+    setDataProvider(dataProvider: DataProvider) {
+        this.dataProvider = dataProvider;
+    }
 
-  abstract generateEventId(): string;
+    abstract generateEventId(): string;
 
 }
 
 export abstract class TitleTableComponent extends TableComponent {
 
-  tableSection!: TableSection;
+    tableSection!: TableSection;
 
-  constructor(
-    override el: ElementRef,
-    override renderer: Renderer2
-  ) {
-    super(el, renderer);
-  }
+    constructor(
+        override el: ElementRef,
+        override renderer: Renderer2
+    ) {
+        super(el, renderer);
+    }
 
-  setTableSection(tableSection: TableSection): void {
-    this.tableSection = tableSection;
-  }
+    setTableSection(tableSection: TableSection): void {
+        this.tableSection = tableSection;
+    }
 
-  override generateEventId(): string {
-    return "titleTable#" + this.tableSection.id;
-  }
+    override generateEventId(): string {
+        return "titleTable#" + this.tableSection.id;
+    }
 
 }
 
 export abstract class MarkTableComponent extends TableComponent {
 
-  mark!: Mark;
+    mark!: Mark;
 
-  constructor(
-    override el: ElementRef,
-    override renderer: Renderer2
-  ) {
-    super(el, renderer);
-  }
+    constructor(
+        override el: ElementRef,
+        override renderer: Renderer2
+    ) {
+        super(el, renderer);
+    }
 
-  setMarkData(mark: Mark): void {
-    this.mark = mark;
-  }
+    setMarkData(mark: Mark): void {
+        this.mark = mark;
+    }
 
-  override generateEventId(): string {
-    return "markTable#" + this.mark.offset + "#" + this.mark.duration;
-  }
+    override generateEventId(): string {
+        return "markTable#" + this.mark.offset + "#" + this.mark.duration;
+    }
 
 }
 
 export abstract class AssignmentTableComponent extends TableComponent {
 
-  assignment!: Assignment;
+    assignment!: Assignment;
 
-  constructor(
-    override el: ElementRef,
-    override renderer: Renderer2
-  ) {
-    super(el, renderer);
-  }
+    constructor(
+        override el: ElementRef,
+        override renderer: Renderer2
+    ) {
+        super(el, renderer);
+    }
 
-  setAssigmentData(assignment: Assignment): void {
-    this.assignment = assignment;
-  }
+    setAssigmentData(assignment: Assignment): void {
+        this.assignment = assignment;
+    }
 
-  override generateEventId(): string {
-    return "assignmentTable#" + this.assignment.id;
-  }
+    override generateEventId(): string {
+        return "assignmentTable#" + this.assignment.id;
+    }
 
 }

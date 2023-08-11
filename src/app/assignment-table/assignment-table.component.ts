@@ -52,7 +52,7 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
         {
             minutes: 10,
             gridCellMinSize: '4px',
-            markAlignMode: 5
+            markAlignMode: 10
         },
         {
             minutes: 15,
