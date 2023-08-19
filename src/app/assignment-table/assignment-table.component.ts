@@ -270,7 +270,7 @@ export class AssignmentTableComponent implements OnInit, AfterViewInit {
     }
 
     getSectionAssignment(sectionId: string): Assignment[] {
-        return this.dataProvider.getAssignment(sectionId);
+        return this.dataProvider.getAssignments(sectionId);
     }
 
     add() {

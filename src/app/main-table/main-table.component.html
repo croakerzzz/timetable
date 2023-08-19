@@ -1,0 +1,35 @@
+<app-schedule-table [dataProvider]="appDataProvider">
+    <div st-scale-title>
+        <h1>Заголовок</h1>
+    </div>
+    <ng-container st-section="1">
+        <div st-section-title>
+            <p>секция 1</p>
+        </div>
+        <ng-container *ngFor="let assignment of appDataProvider.getAssignments('1')">
+            <div [st-section-assignment-title]="assignment">
+                <p>{{assignment.name}}</p>
+            </div>
+            <ng-container *ngFor="let mark of appDataProvider.getMarks('1', assignment.id)">
+                <div [st-section-cell]="mark">
+                    cell
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+    <ng-container st-section="2">
+        <div st-section-title>
+            <p>секция 2</p>
+        </div>
+        <ng-container *ngFor="let assignment of appDataProvider.getAssignments('2')">
+            <div [st-section-assignment-title]="assignment">
+                <p>{{assignment.name}}</p>
+            </div>
+            <ng-container *ngFor="let mark of appDataProvider.getMarks('2', assignment.id)">
+                <div [st-section-cell]="mark">
+                    cell
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</app-schedule-table>

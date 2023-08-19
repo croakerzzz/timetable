@@ -12,16 +12,32 @@ import {MarkComponent} from './scale-table/components/mark/mark/mark.component';
 import {ReactiveComponentModule} from "@ngrx/component";
 import {AssignmentComponent} from './scale-table/components/assignment/assignment/assignment.component';
 import {ScaleTableComponent} from './scale-table/scale-table.component';
+import {ScheduleTableComponent} from './schedule-table/schedule-table.component';
+import {MainTableComponent} from './main-table/main-table.component';
+import {ScaleTitleDirective} from "./directivies/scale-title-directive";
+import {SectionDirective} from "./directivies/section-directive";
+import {SectionTitleDirective} from "./directivies/section-title-directive";
+import {SectionCellDirective} from "./directivies/section-cell-directive";
+import {SectionAssignmentDirective} from "./directivies/section-assignment-directive";
+import {SectionAssignmentTitleDirective} from "./directivies/section-assignment-title-directive";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AssignmentTableComponent,
-    TitleComponent,
-    MarkComponent,
-    AssignmentComponent,
-    ScaleTableComponent,
-  ],
+    declarations: [
+        AppComponent,
+        AssignmentTableComponent,
+        TitleComponent,
+        MarkComponent,
+        AssignmentComponent,
+        ScaleTableComponent,
+        ScheduleTableComponent,
+        MainTableComponent,
+        ScaleTitleDirective,
+        SectionDirective,
+        SectionTitleDirective,
+        SectionAssignmentDirective,
+        SectionAssignmentTitleDirective,
+        SectionCellDirective,
+    ],
     imports: [
         BrowserModule,
         NzDropDownModule,
@@ -30,7 +46,8 @@ import {ScaleTableComponent} from './scale-table/scale-table.component';
         HttpClientModule,
         ReactiveComponentModule
     ],
-  providers: [],
-  bootstrap: [AppComponent]
+    providers: [],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

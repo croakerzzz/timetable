@@ -1,5 +1,18 @@
-import {ElementRef, Renderer2, Type} from "@angular/core";
+import {Directive, ElementRef, Renderer2, Type} from "@angular/core";
 import {DataProvider} from "./data-provider";
+
+export abstract class CommonDirective {
+
+    protected dataProvider!: DataProvider;
+
+    constructor() {
+    }
+
+    setDataProvider(dataProvider: DataProvider): void {
+        this.dataProvider = dataProvider;
+    }
+
+}
 
 export interface Mark {
 

@@ -1,5 +1,21 @@
-import {Assignment, TableSection} from "./common";
+import {Assignment, Mark, TableSection} from "./common";
 import {BehaviorSubject, Observable} from "rxjs";
+
+export interface DirectiveInput {
+    dataProvider: DataProvider;
+}
+
+export interface SectionInput extends DirectiveInput {
+    sectionId: string;
+}
+
+export interface GridPosition {
+    rowStart: number;
+    rowEnd: number;
+    columnStart: number;
+    columnEnd: number;
+    zIndex: number;
+}
 
 export enum EventType {
 
@@ -40,7 +56,34 @@ export interface CancelMark extends DataProviderEvent {
     duration: number;
 }
 
+export interface GridCell {
+    offset: number,
+    title: string,
+}
+
+export interface Step {
+    minutes: number,
+    gridCellMinSize: string,
+    markAlignMode: 5 | 10 | 15;
+}
+
 export abstract class DataProvider {
+
+    abstract get gridCellStep(): number;
+
+    abstract set gridCellStep(v: number);
+
+    abstract get stepCells(): number;
+
+    abstract set stepCells(v: number);
+
+    abstract get steps(): Step[];
+
+    abstract set steps(v: Step[]);
+
+    abstract get currentStep(): number;
+
+    abstract set currentStep(v: number);
 
     protected events$: BehaviorSubject<DataProviderEvent> = new BehaviorSubject<DataProviderEvent>({
         id: '',
@@ -49,7 +92,9 @@ export abstract class DataProvider {
 
     abstract getSections(): TableSection[];
 
-    abstract getAssignment(sectionId: string): Assignment[];
+    abstract getAssignments(sectionId: string): Assignment[];
+
+    abstract getMarks(sectionId: string, assignmentId: string): Mark[];
 
     addRow(id: string, sectionId: string): void {
         this.events$.next({
@@ -83,5 +128,21 @@ export abstract class DataProvider {
     //     duration: duration,
     //   } as ClickMark);
     // }
+
+    getScaleTitlePosition(): GridPosition {
+        return {
+            rowStart: 1,
+            rowEnd: 1,
+            columnStart: 1,
+            columnEnd: 1,
+            zIndex: 10,
+        }
+    }
+
+    abstract getSectionTitlePosition(sectionId: string): GridPosition;
+
+    abstract getSectionAssigmentPosition(assignmentId: string): GridPosition;
+
+    abstract getSectionCellPosition(markId: string): GridPosition;
 
 }

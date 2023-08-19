@@ -1,0 +1,22 @@
+.schedule-table {
+    display: grid;
+    grid-template-columns: 200px repeat(calc((60/var(--grid-cell-step))*24), minmax(var(--grid-cell-minsize), 1fr));
+    grid-template-rows: repeat(100, 50px);
+}
+
+.scale-title-row-cell {
+    font-size: 12px;
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.time-cell {
+    border-top: #afbbc7 solid thin;
+    border-bottom: #afbbc7 solid thin;
+    border-left: #afbbc7 solid thin;
+    z-index: 1;
+    height: 50px;
+    box-sizing: border-box;
+}
