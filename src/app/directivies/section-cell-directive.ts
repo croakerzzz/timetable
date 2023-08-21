@@ -6,8 +6,6 @@ import {CommonDirective, Mark} from "../assignment-table/common";
 })
 export class SectionCellDirective extends CommonDirective implements AfterViewInit {
 
-    map: Map<string, ElementRef> = new Map<string, ElementRef>();
-
     constructor(
         private container: ViewContainerRef,
         private renderer: Renderer2,
@@ -24,8 +22,6 @@ export class SectionCellDirective extends CommonDirective implements AfterViewIn
 
     init(): void {
         console.log('draw section cell');
-
-        console.log('cell map', this.map);
 
         const element = this.elementRef.nativeElement;
 

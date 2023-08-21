@@ -11,9 +11,7 @@
                 <p>{{assignment.name}}</p>
             </div>
             <ng-container *ngFor="let mark of appDataProvider.getMarks('1', assignment.id)">
-                <div [st-section-cell]="mark">
-                    cell
-                </div>
+                <app-cell [st-section-cell]="mark"></app-cell>
             </ng-container>
         </ng-container>
     </ng-container>
@@ -26,9 +24,7 @@
                 <p>{{assignment.name}}</p>
             </div>
             <ng-container *ngFor="let mark of appDataProvider.getMarks('2', assignment.id)">
-                <div [st-section-cell]="mark">
-                    cell
-                </div>
+                <app-cell [st-section-cell]="mark"></app-cell>
             </ng-container>
         </ng-container>
     </ng-container>
