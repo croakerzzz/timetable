@@ -1,17 +1,7 @@
-import {
-    AfterViewInit,
-    ContentChildren,
-    Directive,
-    ElementRef,
-    Host,
-    Input,
-    Optional,
-    QueryList,
-    Renderer2,
-    ViewContainerRef
-} from "@angular/core";
+import {AfterViewInit, Directive, ElementRef, Host, Input, Optional, Renderer2, ViewContainerRef} from "@angular/core";
 import {CommonDirective, Mark} from "../assignment-table/common";
-import {CommonCellComponent} from "../new_components/common-cell/common-cell.component";
+import {CommonCellComponent} from "../new_components/common/common-cell/common-cell.component";
+import {DataProvider, EventType, Positioning, ReceiverType} from "../assignment-table/data-provider";
 
 @Directive({
     selector: "[st-section-cell]"
@@ -34,39 +24,33 @@ export class SectionCellDirective extends CommonDirective implements AfterViewIn
     mark!: Mark;
 
     ngAfterViewInit(): void {
-        // console.log('cell components: ', this.components);
+
     }
 
-    init(): void {
-        console.log('draw section cell');
+    override setDataProvider(dataProvider: DataProvider) {
+        super.setDataProvider(dataProvider);
 
-        const element = this.elementRef.nativeElement;
+        this.dataProvider.events.subscribe(e => {
+            if (e.type === EventType.POSITION && e.receiver === ReceiverType.MARK) {
+                if (this.mark && this.mark.id == e.id) {
+                    const positioning = e as Positioning;
 
-        const position = this.dataProvider.getSectionCellPosition(this.mark.id);
+                    const element = this.elementRef.nativeElement;
 
-        console.log('mark position', position);
-
-        this.renderer.setStyle(element, 'grid-row-start', position.rowStart);
-        this.renderer.setStyle(element, 'grid-row-end', position.rowStart);
-        this.renderer.setStyle(element, 'grid-column-start', position.columnStart);
-        this.renderer.setStyle(element, 'grid-column-end', position.columnEnd);
-        this.renderer.setStyle(element, 'z-index', position.zIndex);
-
-        // console.log(')))))))))))))))))))))))))))))))))))))))', this.components);
-        //
-        // if (this.components && this.components.length > 0) {
-        //     setTimeout(() => {
-        //         this.components?.get(0)?.text1.next(position.columnStart + '');
-        //     });
-        // }
+                    this.renderer.setStyle(element, 'grid-row-start', positioning.position.rowStart);
+                    this.renderer.setStyle(element, 'grid-row-end', positioning.position.rowStart);
+                    this.renderer.setStyle(element, 'grid-column-start', positioning.position.columnStart);
+                    this.renderer.setStyle(element, 'grid-column-end', positioning.position.columnEnd);
+                    this.renderer.setStyle(element, 'z-index', positioning.position.zIndex);
+                }
+            }
+        })
 
         if (this.component) {
             setTimeout(() => {
-                this.component.text = position.columnStart + '';
                 this.component.initData(this.mark, this.dataProvider);
             });
         }
-
     }
 
 }

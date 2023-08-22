@@ -1,17 +1,19 @@
 import {
-    AfterViewInit, ChangeDetectorRef,
+    AfterViewInit,
+    ChangeDetectorRef,
     ContentChildren,
     Directive,
     ElementRef,
-    Input, OnChanges, QueryList,
-    Renderer2, SimpleChanges,
-    TemplateRef, ViewChildren,
+    Input,
+    OnChanges,
+    QueryList,
+    Renderer2,
+    SimpleChanges,
     ViewContainerRef
 } from "@angular/core";
 import {CommonDirective} from "../assignment-table/common";
 import {SectionTitleDirective} from "./section-title-directive";
 import {SectionCellDirective} from "./section-cell-directive";
-import {SectionAssignmentDirective} from "./section-assignment-directive";
 import {SectionAssignmentTitleDirective} from "./section-assignment-title-directive";
 
 @Directive({
@@ -25,8 +27,8 @@ export class SectionDirective extends CommonDirective implements AfterViewInit, 
     @ContentChildren(SectionTitleDirective)
     sectionTitles?: QueryList<SectionTitleDirective>;
 
-    @ContentChildren(SectionAssignmentDirective)
-    sectionAssignments?: QueryList<SectionAssignmentDirective>;
+    // @ContentChildren(SectionAssignmentDirective)
+    // sectionAssignments?: QueryList<SectionAssignmentDirective>;
 
     @ContentChildren(SectionAssignmentTitleDirective)
     sectionAssignmentTitles?: QueryList<SectionAssignmentTitleDirective>;
@@ -56,22 +58,22 @@ export class SectionDirective extends CommonDirective implements AfterViewInit, 
 
         this.sectionTitles?.forEach(st => {
             st.setDataProvider(this.dataProvider);
-            st.init(this.sectionId);
+            st.initData(this.dataProvider.getSections().find(s => s.id == this.sectionId));
         });
 
-        this.sectionAssignments?.forEach(sa => {
-            sa.setDataProvider(this.dataProvider);
-            sa.init();
-        });
+        // this.sectionAssignments?.forEach(sa => {
+        //     sa.setDataProvider(this.dataProvider);
+        //     sa.init();
+        // });
 
         this.sectionAssignmentTitles?.forEach(sc => {
             sc.setDataProvider(this.dataProvider);
-            sc.init();
+            // sc.init();
         });
 
         this.sectionCells?.forEach(sc => {
             sc.setDataProvider(this.dataProvider);
-            sc.init();
+            //sc.init();
         });
     }
 

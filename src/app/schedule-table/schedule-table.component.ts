@@ -75,7 +75,7 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         if (this.scaleTitle) {
             this.scaleTitle.setDataProvider(this.dataProvider);
-            this.scaleTitle.init();
+            //this.scaleTitle.init();
         }
 
         if (this.sections) {
@@ -84,6 +84,8 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
                 s.init();
             });
         }
+
+        this.dataProvider.sendAllPosition();
     }
 
     getSectionAssignment(sectionId: string): Assignment[] {

@@ -18,11 +18,16 @@ import {ScaleTitleDirective} from "./directivies/scale-title-directive";
 import {SectionDirective} from "./directivies/section-directive";
 import {SectionTitleDirective} from "./directivies/section-title-directive";
 import {SectionCellDirective} from "./directivies/section-cell-directive";
-import {SectionAssignmentDirective} from "./directivies/section-assignment-directive";
 import {SectionAssignmentTitleDirective} from "./directivies/section-assignment-title-directive";
-import { CellComponent } from './new_components/cell/cell.component';
-import { CommonCellComponent } from './new_components/common-cell/common-cell.component';
-import { CellTwoComponent } from './new_components/cell-two/cell-two.component';
+import {CellComponent} from './new_components/cell/cell.component';
+import {CommonCellComponent} from './new_components/common/common-cell/common-cell.component';
+import {CellTwoComponent} from './new_components/cell-two/cell-two.component';
+import {ScaleTitleCommonComponent} from './new_components/common/scale-title-common/scale-title-common.component';
+import {ScaleTitleComponent} from './new_components/scale-title/scale-title.component';
+import { SectionAssigmentTitleCommonComponent } from './new_components/common/section-assigment-title-common/section-assigment-title-common.component';
+import { SectionAssignmentTitleComponent } from './new_components/section-assignment-title/section-assignment-title.component';
+import { SectionTitleCommonComponent } from './new_components/common/section-title-common/section-title-common.component';
+import { SectionTitleComponent } from './new_components/section-title/section-title.component';
 
 @NgModule({
     declarations: [
@@ -37,12 +42,17 @@ import { CellTwoComponent } from './new_components/cell-two/cell-two.component';
         ScaleTitleDirective,
         SectionDirective,
         SectionTitleDirective,
-        SectionAssignmentDirective,
         SectionAssignmentTitleDirective,
         SectionCellDirective,
         CellComponent,
         CommonCellComponent,
         CellTwoComponent,
+        ScaleTitleCommonComponent,
+        ScaleTitleComponent,
+        SectionAssigmentTitleCommonComponent,
+        SectionAssignmentTitleComponent,
+        SectionTitleCommonComponent,
+        SectionTitleComponent,
     ],
     imports: [
         BrowserModule,

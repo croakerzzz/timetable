@@ -1,14 +1,13 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
-import {DataProvider} from "../../assignment-table/data-provider";
-import {Mark} from "../../assignment-table/common";
+import {AfterContentInit, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {DataProvider} from "../../../assignment-table/data-provider";
+import {Mark} from "../../../assignment-table/common";
 
 @Component({
     selector: 'app-common-cell',
     templateUrl: './common-cell.component.html',
     styleUrls: ['./common-cell.component.css']
 })
-export class CommonCellComponent implements OnInit, OnChanges {
+export class CommonCellComponent implements OnInit, OnChanges, AfterContentInit {
 
     mark!: Mark;
 
@@ -40,6 +39,10 @@ export class CommonCellComponent implements OnInit, OnChanges {
 
         this.mark = mark;
         this.dataProvider = dataProvider;
+    }
+
+    ngAfterContentInit(): void {
+
     }
 
 }

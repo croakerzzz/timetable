@@ -1,31 +1,42 @@
 <app-schedule-table [dataProvider]="appDataProvider">
-    <div st-scale-title>
-        <h1>Заголовок</h1>
-    </div>
+
+    <app-scale-title st-scale-title>
+    </app-scale-title>
+
     <ng-container st-section="1">
-        <div st-section-title>
-            <p>секция 1</p>
-        </div>
+
+        <app-section-title st-section-title>
+        </app-section-title>
+
         <ng-container *ngFor="let assignment of appDataProvider.getAssignments('1')">
-            <div [st-section-assignment-title]="assignment">
-                <p>{{assignment.name}}</p>
-            </div>
+
+            <app-section-assignment-title [st-section-assignment-title]="assignment">
+            </app-section-assignment-title>
+
             <ng-container *ngFor="let mark of appDataProvider.getMarks('1', assignment.id)">
                 <app-cell-two [st-section-cell]="mark"></app-cell-two>
             </ng-container>
+
         </ng-container>
+
     </ng-container>
+
     <ng-container st-section="2">
-        <div st-section-title>
-            <p>секция 2</p>
-        </div>
+
+        <app-section-title st-section-title>
+        </app-section-title>
+
         <ng-container *ngFor="let assignment of appDataProvider.getAssignments('2')">
-            <div [st-section-assignment-title]="assignment">
-                <p>{{assignment.name}}</p>
-            </div>
+
+            <app-section-assignment-title [st-section-assignment-title]="assignment">
+            </app-section-assignment-title>
+
             <ng-container *ngFor="let mark of appDataProvider.getMarks('2', assignment.id)">
                 <app-cell [st-section-cell]="mark"></app-cell>
             </ng-container>
+
         </ng-container>
+
     </ng-container>
+
 </app-schedule-table>

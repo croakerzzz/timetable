@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonCellComponent} from "../common-cell/common-cell.component";
+import {CommonCellComponent} from "../common/common-cell/common-cell.component";
 
 @Component({
     selector: 'app-cell-two',

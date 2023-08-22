@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CancelMark, DataProvider, EventType, GridPosition} from "../assignment-table/data-provider";
+import {CancelMark, DataProvider, EventType, GridPosition, ReceiverType} from "../assignment-table/data-provider";
 import {Assignment, Mark, TableSection} from "../assignment-table/common";
 import {TitleComponent} from "./components/title/title/title.component";
 import {MarkComponent} from "./components/mark/mark/mark.component";
@@ -59,6 +59,10 @@ export class AppDataProvider extends DataProvider {
 
     constructor(private sections: TableSection[]) {
         super();
+
+        this.events$.subscribe(e => {
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> event: ', e);
+        });
     }
 
     getAssignments(sectionId: string): Assignment[] {
@@ -234,10 +238,49 @@ export class AppDataProvider extends DataProvider {
             columnEnd: !mark ? -1 : this.getMarkEndColumn(mark),
             zIndex: 10,
         }
+
     }
 
     getGridCellStep(): number {
         return this.gridCellStep;
+    }
+
+    sendAllPosition(): void {
+
+        this.sendPosition(
+            '',
+            ReceiverType.SCALE_TITLE,
+            this.getScaleTitlePosition()
+        )
+
+        this.sections.forEach(s => {
+
+            this.sendPosition(
+                s.id,
+                ReceiverType.SECTION,
+                this.getSectionTitlePosition(s.id)
+            )
+
+            s.assignments.forEach(a => {
+
+                this.sendPosition(
+                    a.id,
+                    ReceiverType.ASSIGNMENT,
+                    this.getSectionAssigmentPosition(a.id)
+                )
+
+                a.marks.forEach(m => {
+                    this.sendPosition(
+                        m.id,
+                        ReceiverType.MARK,
+                        this.getSectionCellPosition(m.id)
+                    )
+                });
+
+            });
+
+        });
+
     }
 
 }

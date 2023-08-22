@@ -25,12 +25,24 @@ export enum EventType {
     CLICK_MARK,
     CANCEL_MARK,
     REDRAW,
+    POSITION,
+
+}
+
+export enum ReceiverType {
+
+    EMPTY,
+    SCALE_TITLE,
+    SECTION,
+    ASSIGNMENT,
+    MARK,
 
 }
 
 export interface DataProviderEvent {
     id: string;
     type: EventType;
+    receiver: ReceiverType,
 }
 
 export interface CreateRowEvent extends DataProviderEvent {
@@ -54,6 +66,10 @@ export interface CancelMark extends DataProviderEvent {
     markId: string;
     offset: number;
     duration: number;
+}
+
+export interface Positioning extends DataProviderEvent {
+    position: GridPosition;
 }
 
 export interface GridCell {
@@ -87,6 +103,7 @@ export abstract class DataProvider {
 
     protected events$: BehaviorSubject<DataProviderEvent> = new BehaviorSubject<DataProviderEvent>({
         id: '',
+        receiver: ReceiverType.EMPTY,
         type: EventType.EMPTY
     });
 
@@ -117,6 +134,17 @@ export abstract class DataProvider {
             step: step,
         } as ClickTimeCell);
     }
+
+    sendPosition(id: string, receiver: ReceiverType, position: GridPosition): void {
+        this.events$.next({
+            id: id,
+            type: EventType.POSITION,
+            receiver: receiver,
+            position: position,
+        } as Positioning);
+    }
+
+    abstract sendAllPosition(): void;
 
     abstract clickMark(id: string, markId: string, offset: number, duration: number): void;
 
