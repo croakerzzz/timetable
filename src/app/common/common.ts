@@ -46,12 +46,6 @@ export interface TableSection {
 
     name: string;
 
-    titleComponent: Type<TitleTableComponent>;
-
-    markComponent: Type<MarkTableComponent>;
-
-    assignmentComponent: Type<AssignmentTableComponent>;
-
     assignments: Assignment[];
 
 }

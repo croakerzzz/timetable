@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ScaleTitleCommonComponent} from "../common/scale-title-common/scale-title-common.component";
-import {ScaleTableComponent} from "../../scale-table/scale-table.component";
 
 @Component({
     selector: 'app-scale-title',

@@ -1,7 +1,7 @@
 import {AfterViewInit, Directive, ElementRef, Host, Input, Optional, Renderer2, ViewContainerRef} from "@angular/core";
-import {CommonDirective, Mark} from "../assignment-table/common";
+import {CommonDirective, Mark} from "../common/common";
 import {CommonCellComponent} from "../new_components/common/common-cell/common-cell.component";
-import {DataProvider, EventType, Positioning, ReceiverType} from "../assignment-table/data-provider";
+import {DataProvider, EventType, Positioning, ReceiverType} from "../common/data-provider";
 
 @Directive({
     selector: "[st-section-cell]"

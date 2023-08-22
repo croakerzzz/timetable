@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DataProvider} from "../../../assignment-table/data-provider";
+import {DataProvider} from "../../../common/data-provider";
 
 @Component({
     selector: 'app-scale-title-common',

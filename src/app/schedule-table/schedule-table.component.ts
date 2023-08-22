@@ -8,11 +8,11 @@ import {
     OnInit,
     QueryList
 } from '@angular/core';
-import {DataProvider, GridCell} from "../assignment-table/data-provider";
+import {DataProvider, GridCell} from "../common/data-provider";
 import {toNumber} from "ng-zorro-antd/core/util";
 import {ScaleTitleDirective} from "../directivies/scale-title-directive";
 import {SectionDirective} from "../directivies/section-directive";
-import {Assignment} from "../assignment-table/common";
+import {Assignment} from "../common/common";
 
 @Component({
     selector: 'app-schedule-table',

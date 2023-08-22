@@ -8,12 +8,12 @@ import {
     TemplateRef,
     ViewContainerRef
 } from "@angular/core";
-import {Assignment, CommonDirective} from "../assignment-table/common";
+import {Assignment, CommonDirective} from "../common/common";
 import {ScaleTitleCommonComponent} from "../new_components/common/scale-title-common/scale-title-common.component";
 import {
     SectionAssigmentTitleCommonComponent
 } from "../new_components/common/section-assigment-title-common/section-assigment-title-common.component";
-import {DataProvider, EventType, Positioning, ReceiverType} from "../assignment-table/data-provider";
+import {DataProvider, EventType, Positioning, ReceiverType} from "../common/data-provider";
 
 @Directive({
     selector: "[st-section-assignment-title]"

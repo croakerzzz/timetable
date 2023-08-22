@@ -1,6 +1,6 @@
 import {AfterViewInit, Directive, ElementRef, Host, Input, Optional, Renderer2, ViewContainerRef} from "@angular/core";
-import {DataProvider, EventType, Positioning, ReceiverType} from "../assignment-table/data-provider";
-import {CommonDirective, TableSection} from "../assignment-table/common";
+import {DataProvider, EventType, Positioning, ReceiverType} from "../common/data-provider";
+import {CommonDirective, TableSection} from "../common/common";
 import {
     SectionTitleCommonComponent
 } from "../new_components/common/section-title-common/section-title-common.component";

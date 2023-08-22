@@ -1,6 +1,6 @@
 import {AfterViewInit, Directive, ElementRef, Host, Optional, Renderer2, ViewContainerRef} from "@angular/core";
-import {CommonDirective} from "../assignment-table/common";
-import {DataProvider, EventType, Positioning, ReceiverType} from "../assignment-table/data-provider";
+import {CommonDirective} from "../common/common";
+import {DataProvider, EventType, Positioning, ReceiverType} from "../common/data-provider";
 import {ScaleTitleCommonComponent} from "../new_components/common/scale-title-common/scale-title-common.component";
 
 @Directive({

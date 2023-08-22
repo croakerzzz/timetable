@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {TableSection} from "../../../assignment-table/common";
-import {DataProvider} from "../../../assignment-table/data-provider";
+import {TableSection} from "../../../common/common";
+import {DataProvider} from "../../../common/data-provider";
 
 @Component({
   selector: 'app-section-title-common',

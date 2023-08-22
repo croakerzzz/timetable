@@ -11,7 +11,7 @@ import {
     SimpleChanges,
     ViewContainerRef
 } from "@angular/core";
-import {CommonDirective} from "../assignment-table/common";
+import {CommonDirective} from "../common/common";
 import {SectionTitleDirective} from "./section-title-directive";
 import {SectionCellDirective} from "./section-cell-directive";
 import {SectionAssignmentTitleDirective} from "./section-assignment-title-directive";

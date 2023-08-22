@@ -1,6 +1,6 @@
 import {AfterContentInit, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {DataProvider} from "../../../assignment-table/data-provider";
-import {Mark} from "../../../assignment-table/common";
+import {DataProvider} from "../../../common/data-provider";
+import {Mark} from "../../../common/common";
 
 @Component({
     selector: 'app-common-cell',
