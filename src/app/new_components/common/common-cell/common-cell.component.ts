@@ -35,8 +35,6 @@ export class CommonCellComponent implements OnInit, OnChanges, AfterContentInit 
     }
 
     initData(mark: Mark, dataProvider: DataProvider) {
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', mark);
-
         this.mark = mark;
         this.dataProvider = dataProvider;
     }

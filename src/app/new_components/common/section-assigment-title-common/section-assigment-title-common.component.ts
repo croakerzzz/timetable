@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataProvider} from "../../../common/data-provider";
 import {Assignment} from "../../../common/common";
 

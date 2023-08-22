@@ -54,22 +54,4 @@ export class SectionTitleDirective extends CommonDirective implements AfterViewI
         }
     }
 
-    // init(sectionId: string) {
-    //     console.log('draw section title', sectionId);
-    //
-    //     const element = this.elementRef.nativeElement;
-    //
-    //     if (element && this.renderer) {
-    //         const position = this.dataProvider.getSectionTitlePosition(sectionId);
-    //
-    //         console.log('position', position);
-    //
-    //         this.renderer.setStyle(element, 'grid-row-start', position.rowStart);
-    //         this.renderer.setStyle(element, 'grid-row-end', position.rowEnd);
-    //         this.renderer.setStyle(element, 'grid-column-start', position.columnStart);
-    //         this.renderer.setStyle(element, 'grid-column-end', position.columnEnd);
-    //         this.renderer.setStyle(element, 'z-index', position.zIndex);
-    //     }
-    // }
-
 }

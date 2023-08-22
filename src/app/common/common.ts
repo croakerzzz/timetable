@@ -1,6 +1,14 @@
 import {Directive, ElementRef, Renderer2, Type} from "@angular/core";
 import {DataProvider} from "./data-provider";
 
+export enum AssignmentState {
+
+    NORMAL,
+    CREATED_NOT_SAVED,
+    CREATED_SAVED,
+
+}
+
 export abstract class CommonDirective {
 
     protected dataProvider!: DataProvider;
@@ -34,7 +42,7 @@ export interface Assignment {
 
     name: string;
 
-    isEdit: boolean;
+    state: AssignmentState;
 
     marks: Mark[];
 

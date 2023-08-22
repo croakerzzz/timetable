@@ -1,1 +1,5 @@
-<p>{{assignment ? assignment.name : ''}}</p>
+<div *ngIf="isNormal()">
+    <p>{{assignment ? assignment.name : ''}}</p>
+</div>
+<div id="created" *ngIf="isCreatedNotSaved()">
+</div>

@@ -42,8 +42,6 @@ export class SectionAssignmentTitleDirective extends CommonDirective implements 
 
         this.dataProvider.events.subscribe(e => {
             if (e.type === EventType.POSITION && e.receiver === ReceiverType.ASSIGNMENT && e.id == this.assignment.id) {
-                console.log('++++++++++++++++++++++++++++++++++++++++++', e);
-
                 const positioning = e as Positioning;
 
                 const element = this.elementRef.nativeElement;
@@ -57,28 +55,10 @@ export class SectionAssignmentTitleDirective extends CommonDirective implements 
         })
 
         if (this.component) {
-            console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-
             setTimeout(() => {
                 this.component.initData(this.assignment, this.dataProvider);
             });
         }
     }
-
-    // init(): void {
-    //     console.log('draw section assignment title', this.assignment.id);
-    //
-    //     const element = this.elementRef.nativeElement;
-    //
-    //     const position = this.dataProvider.getSectionAssigmentPosition(this.assignment.id);
-    //
-    //     console.log('position', position);
-    //
-    //     this.renderer.setStyle(element, 'grid-row-start', position.rowStart);
-    //     this.renderer.setStyle(element, 'grid-row-end', position.rowEnd);
-    //     this.renderer.setStyle(element, 'grid-column-start', position.columnStart);
-    //     this.renderer.setStyle(element, 'grid-column-end', position.columnEnd);
-    //     this.renderer.setStyle(element, 'z-index', position.zIndex);
-    // }
 
 }

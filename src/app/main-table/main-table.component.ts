@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Assignment, Mark, TableSection} from "../common/common";
+import {Assignment, AssignmentState, Mark, TableSection} from "../common/common";
 import {CancelMark, DataProvider, EventType, GridPosition, ReceiverType, Step} from "../common/data-provider";
 
 export class AppDataProvider extends DataProvider {
@@ -42,7 +42,9 @@ export class AppDataProvider extends DataProvider {
         super();
 
         this.events$.subscribe(e => {
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> event: ', e);
+            // if (e.type === EventType.POSITION && e.receiver === ReceiverType.ASSIGNMENT) {
+            //     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> event: ', e);
+            // }
         });
     }
 
@@ -58,36 +60,36 @@ export class AppDataProvider extends DataProvider {
         return this.sections;
     }
 
-    override addRow(id: string, sectionId: string) {
-        const section = this.sections.find(s => s.id === sectionId);
-
-        if (section) {
-            section.assignments.unshift({
-                id: '',
-                name: '',
-                isEdit: true,
-                marks: []
-            })
-        }
-
-        super.addRow(id, sectionId);
-    }
+    // override addRow(id: string, sectionId: string) {
+    //     const section = this.sections.find(s => s.id === sectionId);
+    //
+    //     if (section) {
+    //         section.assignments.unshift({
+    //             id: '',
+    //             name: '',
+    //             isEdit: true,
+    //             marks: []
+    //         })
+    //     }
+    //
+    //     super.addRow(id, sectionId);
+    // }
 
     override clickTimeCell(id: string, sectionId: string, offset: number, time: string, step: number) {
-        const section = this.sections.find(s => s.id === sectionId);
-
-        const assigment = section?.assignments.find(a => a.isEdit);
-
-        if (assigment) {
-            assigment.marks.push({
-                id: '',
-                offset: offset,
-                duration: step,
-                canceled: false,
-            });
-        }
-
-        super.clickTimeCell(id, sectionId, offset, time, step);
+        // const section = this.sections.find(s => s.id === sectionId);
+        //
+        // const assigment = section?.assignments.find(a => a.isEdit);
+        //
+        // if (assigment) {
+        //     assigment.marks.push({
+        //         id: '',
+        //         offset: offset,
+        //         duration: step,
+        //         canceled: false,
+        //     });
+        // }
+        //
+        // super.clickTimeCell(id, sectionId, offset, time, step);
     }
 
     override clickMark(id: string, markId: string, offset: number, duration: number) {
@@ -97,8 +99,6 @@ export class AppDataProvider extends DataProvider {
 
         if (parent) {
             parent.marks?.filter(m => m.id != markId).forEach(m => {
-                console.log('cancel mark', m.id);
-
                 this.events$.next({
                     id: id,
                     type: EventType.CANCEL_MARK,
@@ -120,8 +120,6 @@ export class AppDataProvider extends DataProvider {
 
             row += this.sections[index].assignments.length + 1;
         }
-
-        console.log('row', row);
 
         return {
             rowStart: row,
@@ -157,8 +155,6 @@ export class AppDataProvider extends DataProvider {
             }
 
         }
-
-        console.log('assigment row', row);
 
         return {
             rowStart: row,
@@ -205,8 +201,6 @@ export class AppDataProvider extends DataProvider {
             }
 
         }
-
-        console.log('mark row', row);
 
         const mark = this.sections
             .flatMap(s => s.assignments.flatMap(a => a.marks))
@@ -264,6 +258,23 @@ export class AppDataProvider extends DataProvider {
 
     }
 
+    addRow(sectionId: string): void {
+        const section = this.sections.find(s => s.id === sectionId);
+
+        if (section) {
+            section.assignments.unshift({
+                id: sectionId + '#new_assignment',
+                name: '',
+                state: AssignmentState.CREATED_NOT_SAVED,
+                marks: []
+            })
+        }
+
+        setTimeout(() => {
+            this.sendAllPosition();
+        });
+    }
+
 }
 
 @Component({
@@ -281,7 +292,7 @@ export class MainTableComponent implements OnInit {
                 {
                     id: "1",
                     name: "Гелофузин р-р д/инф. 500 мл 500",
-                    isEdit: false,
+                    state: AssignmentState.NORMAL,
                     marks: [
                         {
                             id: "1",
@@ -306,7 +317,7 @@ export class MainTableComponent implements OnInit {
                 {
                     id: "2",
                     name: "Конфокальная микроскопия роговицы",
-                    isEdit: false,
+                    state: AssignmentState.NORMAL,
                     marks: [
                         {
                             id: "3",
@@ -319,7 +330,7 @@ export class MainTableComponent implements OnInit {
                 {
                     id: "3",
                     name: "Конфокальная микроскопия роговицы",
-                    isEdit: false,
+                    state: AssignmentState.NORMAL,
                     marks: [
                         {
                             id: "4",
@@ -338,7 +349,7 @@ export class MainTableComponent implements OnInit {
                 {
                     id: "4",
                     name: "Конфокальная микроскопия роговицы",
-                    isEdit: false,
+                    state: AssignmentState.NORMAL,
                     marks: [
                         {
                             id: "5",
@@ -375,7 +386,7 @@ export class MainTableComponent implements OnInit {
                 {
                     id: "5",
                     name: "Что то там",
-                    isEdit: false,
+                    state: AssignmentState.NORMAL,
                     marks: [
                         {
                             id: "9",

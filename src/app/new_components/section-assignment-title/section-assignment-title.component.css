@@ -1,3 +1,9 @@
 p {
     background-color: lightgreen;
 }
+
+#created {
+    border: burlywood solid 2px;
+    min-height: 50px;
+    box-sizing: border-box;
+}

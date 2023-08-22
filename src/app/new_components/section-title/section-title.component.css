@@ -1,0 +1,13 @@
+div {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
+
+div p {
+    background-color: lightpink;
+}
+
+div button {
+    height: 24px;
+}

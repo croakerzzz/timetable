@@ -17,4 +17,7 @@ export class SectionTitleComponent extends SectionTitleCommonComponent implement
         super.ngOnInit()
     }
 
+    addRow() {
+        this.dataProvider.addRow(this.section.id);
+    }
 }

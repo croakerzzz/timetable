@@ -110,8 +110,6 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
     }
 
     clickTimeCell(sectionId: string, timeCell: number) {
-        console.log(this.gridCells[timeCell]);
-
         this.dataProvider.clickTimeCell(
             "",
             sectionId,

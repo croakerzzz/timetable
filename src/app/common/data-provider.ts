@@ -113,12 +113,7 @@ export abstract class DataProvider {
 
     abstract getMarks(sectionId: string, assignmentId: string): Mark[];
 
-    addRow(id: string, sectionId: string): void {
-        this.events$.next({
-            id: id,
-            type: EventType.REDRAW,
-        } as DataProviderEvent);
-    }
+    abstract addRow(sectionId: string): void;
 
     get events(): Observable<DataProviderEvent> {
         return this.events$.asObservable();

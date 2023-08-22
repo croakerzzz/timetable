@@ -16,8 +16,6 @@ export class ScaleTitleComponent extends ScaleTitleCommonComponent implements On
 
     override ngOnInit(): void {
         super.ngOnInit();
-
-        console.log('ddddddddddddddddddddddddddddddddddddddddddddddd', this.dataProvider);
     }
 
 }
