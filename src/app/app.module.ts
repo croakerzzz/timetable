@@ -21,6 +21,8 @@ import {SectionCellDirective} from "./directivies/section-cell-directive";
 import {SectionAssignmentDirective} from "./directivies/section-assignment-directive";
 import {SectionAssignmentTitleDirective} from "./directivies/section-assignment-title-directive";
 import { CellComponent } from './new_components/cell/cell.component';
+import { CommonCellComponent } from './new_components/common-cell/common-cell.component';
+import { CellTwoComponent } from './new_components/cell-two/cell-two.component';
 
 @NgModule({
     declarations: [
@@ -39,6 +41,8 @@ import { CellComponent } from './new_components/cell/cell.component';
         SectionAssignmentTitleDirective,
         SectionCellDirective,
         CellComponent,
+        CommonCellComponent,
+        CellTwoComponent,
     ],
     imports: [
         BrowserModule,

@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CommonCellComponent} from "../common-cell/common-cell.component";
 
 @Component({
-  selector: 'app-cell',
-  templateUrl: './cell.component.html',
-  styleUrls: ['./cell.component.css']
+    selector: 'app-cell',
+    templateUrl: './cell.component.html',
+    styleUrls: ['./cell.component.css'],
+    providers: [{provide: CommonCellComponent, useExisting: CellComponent}]
 })
-export class CellComponent implements OnInit {
+export class CellComponent extends CommonCellComponent implements OnInit {
 
-  constructor() { }
+    constructor() {
+        super();
+    }
 
-  ngOnInit(): void {
-  }
+    override ngOnInit(): void {
+        super.ngOnInit();
+    }
 
 }

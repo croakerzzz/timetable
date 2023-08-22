@@ -1,15 +1,31 @@
-import {AfterViewInit, Directive, ElementRef, Input, Renderer2, ViewContainerRef} from "@angular/core";
+import {
+    AfterViewInit,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    Host,
+    Input,
+    Optional,
+    QueryList,
+    Renderer2,
+    ViewContainerRef
+} from "@angular/core";
 import {CommonDirective, Mark} from "../assignment-table/common";
+import {CommonCellComponent} from "../new_components/common-cell/common-cell.component";
 
 @Directive({
     selector: "[st-section-cell]"
 })
 export class SectionCellDirective extends CommonDirective implements AfterViewInit {
 
+    // @ContentChildren(CommonCellComponent, {descendants: true})
+    // components?: QueryList<CommonCellComponent>;
+
     constructor(
         private container: ViewContainerRef,
         private renderer: Renderer2,
         private elementRef: ElementRef,
+        @Host() @Optional() private component: CommonCellComponent,
     ) {
         super();
     }
@@ -18,6 +34,7 @@ export class SectionCellDirective extends CommonDirective implements AfterViewIn
     mark!: Mark;
 
     ngAfterViewInit(): void {
+        // console.log('cell components: ', this.components);
     }
 
     init(): void {
@@ -34,6 +51,22 @@ export class SectionCellDirective extends CommonDirective implements AfterViewIn
         this.renderer.setStyle(element, 'grid-column-start', position.columnStart);
         this.renderer.setStyle(element, 'grid-column-end', position.columnEnd);
         this.renderer.setStyle(element, 'z-index', position.zIndex);
+
+        // console.log(')))))))))))))))))))))))))))))))))))))))', this.components);
+        //
+        // if (this.components && this.components.length > 0) {
+        //     setTimeout(() => {
+        //         this.components?.get(0)?.text1.next(position.columnStart + '');
+        //     });
+        // }
+
+        if (this.component) {
+            setTimeout(() => {
+                this.component.text = position.columnStart + '';
+                this.component.initData(this.mark, this.dataProvider);
+            });
+        }
+
     }
 
 }
