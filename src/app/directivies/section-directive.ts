@@ -47,7 +47,13 @@ export class SectionDirective extends CommonDirective implements AfterViewInit, 
 
     ngAfterViewInit(): void {
         this.sectionAssignmentTitles?.changes.subscribe(c => {
-            this.sectionAssignmentTitles?.forEach(sc => {
+            this.sectionAssignmentTitles?.forEach(sa => {
+                sa.setDataProvider(this.dataProvider);
+            });
+        })
+
+        this.sectionCells?.changes.subscribe(c => {
+            this.sectionCells?.forEach(sc => {
                 sc.setDataProvider(this.dataProvider);
             });
         })
@@ -57,17 +63,10 @@ export class SectionDirective extends CommonDirective implements AfterViewInit, 
     }
 
     init(): void {
-        // const view = this.container.createEmbeddedView(this.template);
-
         this.sectionTitles?.forEach(st => {
             st.setDataProvider(this.dataProvider);
             st.initData(this.dataProvider.getSections().find(s => s.id == this.sectionId));
         });
-
-        // this.sectionAssignments?.forEach(sa => {
-        //     sa.setDataProvider(this.dataProvider);
-        //     sa.init();
-        // });
 
         this.sectionAssignmentTitles?.forEach(sc => {
             sc.setDataProvider(this.dataProvider);

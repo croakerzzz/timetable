@@ -1,42 +1,50 @@
-<app-schedule-table [dataProvider]="appDataProvider">
+<div>
+    <div *ngIf="editor">
+        <input type="text" [(ngModel)]="assignmentName" />
+        <p>{{newMarks | json}}</p>
+        <button (click)="add()">Добавить</button>
+        <button (click)="cancel()">Отмена</button>
+    </div>
+    <app-schedule-table [dataProvider]="appDataProvider">
 
-    <app-scale-title st-scale-title>
-    </app-scale-title>
+        <app-scale-title st-scale-title>
+        </app-scale-title>
 
-    <ng-container st-section="1">
+        <ng-container st-section="1">
 
-        <app-section-title st-section-title>
-        </app-section-title>
+            <app-section-title st-section-title>
+            </app-section-title>
 
-        <ng-container *ngFor="let assignment of appDataProvider.getAssignments('1')">
+            <ng-container *ngFor="let assignment of appDataProvider.getAssignments('1')">
 
-            <app-section-assignment-title [st-section-assignment-title]="assignment">
-            </app-section-assignment-title>
+                <app-section-assignment-title [st-section-assignment-title]="assignment">
+                </app-section-assignment-title>
 
-            <ng-container *ngFor="let mark of appDataProvider.getMarks('1', assignment.id)">
-                <app-cell-two [st-section-cell]="mark"></app-cell-two>
+                <ng-container *ngFor="let mark of appDataProvider.getMarks('1', assignment.id)">
+                    <app-cell-two [st-section-cell]="mark"></app-cell-two>
+                </ng-container>
+
             </ng-container>
 
         </ng-container>
 
-    </ng-container>
+        <ng-container st-section="2">
 
-    <ng-container st-section="2">
+            <app-section-title st-section-title>
+            </app-section-title>
 
-        <app-section-title st-section-title>
-        </app-section-title>
+            <ng-container *ngFor="let assignment of appDataProvider.getAssignments('2')">
 
-        <ng-container *ngFor="let assignment of appDataProvider.getAssignments('2')">
+                <app-section-assignment-title [st-section-assignment-title]="assignment">
+                </app-section-assignment-title>
 
-            <app-section-assignment-title [st-section-assignment-title]="assignment">
-            </app-section-assignment-title>
+                <ng-container *ngFor="let mark of appDataProvider.getMarks('2', assignment.id)">
+                    <app-cell [st-section-cell]="mark"></app-cell>
+                </ng-container>
 
-            <ng-container *ngFor="let mark of appDataProvider.getMarks('2', assignment.id)">
-                <app-cell [st-section-cell]="mark"></app-cell>
             </ng-container>
 
         </ng-container>
 
-    </ng-container>
-
-</app-schedule-table>
+    </app-schedule-table>
+</div>

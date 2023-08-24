@@ -17,4 +17,8 @@ export class CellComponent extends CommonCellComponent implements OnInit {
         super.ngOnInit();
     }
 
+    clickCell() {
+        this.dataProvider.clickMark(this.mark.id);
+    }
+
 }

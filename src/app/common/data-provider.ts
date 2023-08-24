@@ -1,5 +1,5 @@
 import {Assignment, Mark, TableSection} from "./common";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, find, Observable, Subject} from "rxjs";
 
 export interface DirectiveInput {
     dataProvider: DataProvider;
@@ -20,11 +20,10 @@ export interface GridPosition {
 export enum EventType {
 
     EMPTY,
-    CREATE_ROW,
-    CLICK_TIME_CELL,
-    CLICK_MARK,
-    CANCEL_MARK,
-    REDRAW,
+    NEW_ROW_CREATED,
+    NEW_ROW_CANCELED,
+    NEW_MARK_CREATED,
+    NEW_MARK_CANCELED,
     POSITION,
 
 }
@@ -45,8 +44,21 @@ export interface DataProviderEvent {
     receiver: ReceiverType,
 }
 
-export interface CreateRowEvent extends DataProviderEvent {
+export interface NewRowCreatedEvent extends DataProviderEvent {
     sectionId: string;
+}
+
+export interface NewMarkCreatedEvent extends DataProviderEvent {
+    assignmentId: string;
+}
+
+export interface NewRowCanceledEvent extends DataProviderEvent {
+    sectionId: string;
+}
+
+export interface NewMarkCanceledEvent extends DataProviderEvent {
+    assignmentId: string;
+    offset: number;
 }
 
 export interface ClickTimeCell extends DataProviderEvent {
@@ -101,11 +113,7 @@ export abstract class DataProvider {
 
     abstract set currentStep(v: number);
 
-    protected events$: BehaviorSubject<DataProviderEvent> = new BehaviorSubject<DataProviderEvent>({
-        id: '',
-        receiver: ReceiverType.EMPTY,
-        type: EventType.EMPTY
-    });
+    protected events$: Subject<DataProviderEvent> = new Subject<DataProviderEvent>();
 
     abstract getSections(): TableSection[];
 
@@ -113,21 +121,22 @@ export abstract class DataProvider {
 
     abstract getMarks(sectionId: string, assignmentId: string): Mark[];
 
+    // --- действия ---
+
     abstract addRow(sectionId: string): void;
+
+    abstract cancelAddRow(sectionId: string): void;
+
+    abstract applyAddRow(sectionId: string, name: string): void;
+
+    abstract clickEmptyCell(id: string, sectionId: string, offset: number, time: string, step: number): void;
+
+    abstract clickMark(markId: string): void;
+
+    // ---
 
     get events(): Observable<DataProviderEvent> {
         return this.events$.asObservable();
-    }
-
-    clickTimeCell(id: string, sectionId: string, offset: number, time: string, step: number): void {
-        this.events$.next({
-            id: id,
-            type: EventType.CLICK_TIME_CELL,
-            sectionId: sectionId,
-            offset: offset,
-            time: time,
-            step: step,
-        } as ClickTimeCell);
     }
 
     sendPosition(id: string, receiver: ReceiverType, position: GridPosition): void {
@@ -140,8 +149,6 @@ export abstract class DataProvider {
     }
 
     abstract sendAllPosition(): void;
-
-    abstract clickMark(id: string, markId: string, offset: number, duration: number): void;
 
     //   this.events$.next({
     //     id: id,
@@ -167,5 +174,24 @@ export abstract class DataProvider {
     abstract getSectionAssigmentPosition(assignmentId: string): GridPosition;
 
     abstract getSectionCellPosition(markId: string): GridPosition;
+
+    findMark(markId: string): Mark | undefined {
+        let mark = this.getSections()
+            .flatMap(s => s.assignments
+                .flatMap(a => a.marks))
+            .find(m => m.id == markId);
+
+        if (!mark) {
+            mark = this.getSections()
+                .flatMap(s => s.assignments
+                    .flatMap(a => a.marks)
+                    .flatMap(m => m.marks))
+                .find(m => m?.id == markId);
+
+            return mark;
+        } else {
+            return mark;
+        }
+    }
 
 }

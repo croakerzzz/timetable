@@ -1,4 +1,4 @@
 <div>
-    <button (click)="addRow()">+</button>
+    <button [disabled]="!addButtonEnabled" (click)="addRow()">+</button>
     <p>{{section ? section.name : ''}}</p>
 </div>

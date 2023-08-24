@@ -1,3 +1,5 @@
-<div class="time-table-row-assignment-mark">
-    {{mark ? '+' + mark.offset : ''}}
-</div>
+<ng-container *ngIf="dataProvider">
+    <div class="time-table-row-assignment-mark" (click)="clickCell()">
+        {{mark ? '+' + mark.offset : ''}}
+    </div>
+</ng-container>

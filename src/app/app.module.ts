@@ -27,6 +27,7 @@ import {
 } from './new_components/section-assignment-title/section-assignment-title.component';
 import {SectionTitleCommonComponent} from './new_components/common/section-title-common/section-title-common.component';
 import {SectionTitleComponent} from './new_components/section-title/section-title.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
     declarations: [
@@ -54,7 +55,8 @@ import {SectionTitleComponent} from './new_components/section-title/section-titl
         BrowserAnimationsModule,
         NzIconModule,
         HttpClientModule,
-        ReactiveComponentModule
+        ReactiveComponentModule,
+        FormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

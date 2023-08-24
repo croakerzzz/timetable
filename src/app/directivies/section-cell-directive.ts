@@ -31,8 +31,12 @@ export class SectionCellDirective extends CommonDirective implements AfterViewIn
         super.setDataProvider(dataProvider);
 
         this.dataProvider.events.subscribe(e => {
+            // console.log('mark', this.mark);
+            // console.log('event', e);
+
             if (e.type === EventType.POSITION && e.receiver === ReceiverType.MARK) {
                 if (this.mark && this.mark.id == e.id) {
+
                     const positioning = e as Positioning;
 
                     const element = this.elementRef.nativeElement;

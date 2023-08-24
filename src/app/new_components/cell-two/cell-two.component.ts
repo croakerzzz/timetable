@@ -16,4 +16,9 @@ export class CellTwoComponent extends CommonCellComponent implements OnInit {
     override ngOnInit(): void {
         super.ngOnInit();
     }
+
+    clickCell() {
+        this.dataProvider.clickMark(this.mark.id);
+    }
+
 }

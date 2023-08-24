@@ -11,7 +11,7 @@ export class CommonCellComponent implements OnInit, OnChanges, AfterContentInit 
 
     mark!: Mark;
 
-    private dataProvider!: DataProvider;
+    dataProvider!: DataProvider;
 
     // text1 = new BehaviorSubject<string>('2');
 

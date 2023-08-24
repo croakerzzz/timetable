@@ -9,6 +9,14 @@ export enum AssignmentState {
 
 }
 
+export enum MarkState {
+
+    NORMAL,
+    CREATED_NOT_SAVED,
+    CREATED_SAVED,
+
+}
+
 export abstract class CommonDirective {
 
     protected dataProvider!: DataProvider;
@@ -30,7 +38,7 @@ export interface Mark {
 
     duration: number;
 
-    canceled: boolean;
+    state: MarkState;
 
     marks?: Mark[];
 
