@@ -46,5 +46,41 @@
 
         </ng-container>
 
+        <ng-container st-section="3">
+
+            <app-section-title st-section-title>
+            </app-section-title>
+
+            <ng-container *ngFor="let assignment of appDataProvider.getAssignments('3')">
+
+                <app-section-assignment-title [st-section-assignment-title]="assignment">
+                </app-section-assignment-title>
+
+                <ng-container *ngFor="let mark of appDataProvider.getMarks('3', assignment.id)">
+                    <app-cell [st-section-cell]="mark"></app-cell>
+                </ng-container>
+
+            </ng-container>
+
+        </ng-container>
+
+        <ng-container st-section="4">
+
+            <app-section-title st-section-title>
+            </app-section-title>
+
+            <ng-container *ngFor="let assignment of appDataProvider.getAssignments('4')">
+
+                <app-section-assignment-title [st-section-assignment-title]="assignment">
+                </app-section-assignment-title>
+
+                <ng-container *ngFor="let mark of appDataProvider.getMarks('4', assignment.id)">
+                    <app-cell [st-section-cell]="mark"></app-cell>
+                </ng-container>
+
+            </ng-container>
+
+        </ng-container>
+
     </app-schedule-table>
 </div>

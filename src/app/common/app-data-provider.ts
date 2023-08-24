@@ -1,8 +1,9 @@
 import {
-    CancelMark,
     DataProvider,
     EventType,
-    GridPosition, NewMarkCanceledEvent, NewMarkCreatedEvent,
+    GridPosition,
+    NewMarkCanceledEvent,
+    NewMarkCreatedEvent,
     NewRowCanceledEvent,
     NewRowCreatedEvent,
     ReceiverType,
@@ -61,7 +62,18 @@ export class AppDataProvider extends DataProvider {
     }
 
     getMarks(sectionId: string, assignmentId: string) {
-        return this.getAssignments(sectionId).find(a => a.id === assignmentId)?.marks || [];
+
+        const result: Mark[] = [];
+
+        this.getAssignments(sectionId).find(a => a.id === assignmentId)?.marks.forEach(m => {
+            if (m.marks && m.marks.length > 0) {
+                m.marks.forEach(sm => result.push(sm));
+            } else {
+                result.push(m);
+            }
+        })
+
+        return result;
     }
 
     getSections(): TableSection[] {
@@ -210,7 +222,9 @@ export class AppDataProvider extends DataProvider {
 
             for (let aIndex = 0; aIndex < this.sections[index].assignments.length; aIndex++) {
 
-                if (this.sections[index].assignments[aIndex].marks.some(m => m.id == markId)) {
+                if (this.sections[index].assignments[aIndex].marks
+                    .some(m => m.id == markId || m.marks
+                        ?.some(m => m.id == markId))) {
                     exit = true;
                     break;
                 }
@@ -225,9 +239,17 @@ export class AppDataProvider extends DataProvider {
 
         }
 
-        const mark = this.sections
+        let mark = this.sections
             .flatMap(s => s.assignments.flatMap(a => a.marks))
             .find(m => m.id == markId);
+
+        if (!mark) {
+            mark = this.sections
+                .flatMap(s => s.assignments
+                    .flatMap(a => a.marks)
+                    .flatMap(m => m.marks))
+                .find(m => m?.id == markId);
+        }
 
         return {
             rowStart: row,
@@ -268,11 +290,21 @@ export class AppDataProvider extends DataProvider {
                 )
 
                 a.marks.forEach(m => {
-                    this.sendPosition(
-                        m.id,
-                        ReceiverType.MARK,
-                        this.getSectionCellPosition(m.id)
-                    )
+                    if (m.marks && m.marks.length > 0) {
+                        m.marks.forEach(sm => {
+                            this.sendPosition(
+                                sm.id,
+                                ReceiverType.MARK,
+                                this.getSectionCellPosition(sm.id)
+                            )
+                        });
+                    } else {
+                        this.sendPosition(
+                            m.id,
+                            ReceiverType.MARK,
+                            this.getSectionCellPosition(m.id)
+                        )
+                    }
                 });
 
             });
