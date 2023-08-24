@@ -10,3 +10,8 @@
     box-sizing: border-box;
     opacity: 0.9;
 }
+
+.canceled {
+    color: red;
+    font-size: 36px;
+}

@@ -1,4 +1,5 @@
 import {
+    CancelRowEditedEvent,
     DataProvider,
     EventType,
     GridPosition,
@@ -7,6 +8,7 @@ import {
     NewRowCanceledEvent,
     NewRowCreatedEvent,
     ReceiverType,
+    RowEditedEvent,
     Step
 } from "./data-provider";
 import {Assignment, AssignmentState, Mark, MarkState, TableSection} from "./common";
@@ -100,49 +102,62 @@ export class AppDataProvider extends DataProvider {
 
         const parent = marks.find(m => m.marks && m.marks.some(sm => sm.id === markId));
 
-        if (!parent) {
-            const mark = marks.find(m => m.id == markId);
+        const assignment = this.findAssignmentByMark(markId);
 
-            if (mark) {
+        if (assignment) {
+            switch (assignment.state) {
+                case AssignmentState.CREATED_NOT_SAVED: {
+                    if (!parent) {
+                        const mark = marks.find(m => m.id == markId);
 
-                if (mark.state === MarkState.CREATED_NOT_SAVED) {
+                        if (mark && mark.state === MarkState.CREATED_NOT_SAVED) {
+                            assignment.marks.splice(assignment.marks.indexOf(mark), 1);
 
-                    const assignment = this.sections
-                        .flatMap(s => s.assignments)
-                        .find(a => a.marks
-                            .some(m => m.id == markId));
-
-                    if (assignment) {
-                        assignment.marks.splice(assignment.marks.indexOf(mark), 1);
-
-                        setTimeout(() => {
-                            this.events$.next({
-                                id: mark.id,
-                                type: EventType.NEW_MARK_CANCELED,
-                                assignmentId: assignment.id,
-                                offset: mark.offset,
-                            } as NewMarkCanceledEvent);
-                        })
+                            setTimeout(() => {
+                                this.events$.next({
+                                    id: mark.id,
+                                    type: EventType.NEW_MARK_CANCELED,
+                                    assignmentId: assignment.id,
+                                    offset: mark.offset,
+                                } as NewMarkCanceledEvent);
+                            })
+                        }
+                    } else {
+                        const mark = parent?.marks?.find(m => m.id == markId);
                     }
 
+                    break;
                 }
 
-                // parent.marks?.filter(m => m.id != markId).forEach(m => {
-                //     this.events$.next({
-                //         id: id,
-                //         type: EventType.CANCEL_MARK,
-                //         markId: m.id,
-                //         offset: offset,
-                //         duration: duration
-                //     } as CancelMark);
-                // })
+                case AssignmentState.EDITED: {
+                    if (!parent) {
+                        const mark = marks.find(m => m.id == markId);
+
+                        if (mark) {
+                            switch (mark.state) {
+                                case MarkState.NORMAL: {
+                                    mark.state = MarkState.CANCELED_NOT_SAVED;
+                                    break;
+                                }
+                                case MarkState.CANCELED_NOT_SAVED: {
+                                    mark.state = MarkState.NORMAL;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+
+                    }
+
+                    break;
+                }
+
+                case AssignmentState.NORMAL: {
+                    break;
+                }
             }
-
-        } else {
-
-            const mark = parent?.marks?.find(m => m.id == markId);
-
         }
+
     }
 
     override getSectionTitlePosition(sectionId: string): GridPosition {
@@ -197,6 +212,48 @@ export class AppDataProvider extends DataProvider {
             columnStart: 1,
             columnEnd: 1,
             zIndex: 10,
+        }
+    }
+
+    override editRow(assignmentId: string): void {
+        const assignment = this.findAssigment(assignmentId);
+
+        if (assignment) {
+
+            assignment.state = AssignmentState.EDITED;
+
+            setTimeout(() => {
+                this.events$.next({
+                    id: assignment.id,
+                    type: EventType.ROW_EDITED,
+                } as RowEditedEvent);
+            })
+
+        }
+    }
+
+    override cancelEditRow(assignmentId: string): void {
+        const assignment = this.findAssigment(assignmentId);
+
+        if (assignment) {
+
+            assignment.state = AssignmentState.NORMAL;
+
+            const marks = this.findAllMarksByAssignment(assignmentId);
+
+            marks.forEach(m => {
+                if (m.state === MarkState.CANCELED_NOT_SAVED) {
+                    m.state = MarkState.NORMAL;
+                }
+            })
+
+            setTimeout(() => {
+                this.events$.next({
+                    id: assignment.id,
+                    type: EventType.CANCEL_ROW_EDITED,
+                } as CancelRowEditedEvent);
+            })
+
         }
     }
 

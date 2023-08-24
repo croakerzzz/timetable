@@ -1,5 +1,6 @@
 <ng-container *ngIf="dataProvider">
     <div class="time-table-row-assignment-mark" (click)="clickCell()">
-        {{mark ? '+' + mark.offset : ''}}
+        <p *ngIf="isNormal()">{{mark ? '+' + mark.offset : ''}}</p>
+        <p class="canceled" *ngIf="isCanceled()">X</p>
     </div>
 </ng-container>

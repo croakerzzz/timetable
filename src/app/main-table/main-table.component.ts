@@ -1,6 +1,12 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {AssignmentState, Mark, MarkState, TableSection} from "../common/common";
-import {EventType, NewMarkCanceledEvent, NewMarkCreatedEvent, NewRowCreatedEvent} from "../common/data-provider";
+import {Assignment, AssignmentState, Mark, MarkState, TableSection} from "../common/common";
+import {
+    EventType,
+    NewMarkCanceledEvent,
+    NewMarkCreatedEvent,
+    NewRowCreatedEvent,
+    RowEditedEvent
+} from "../common/data-provider";
 import {AppDataProvider} from "../common/app-data-provider";
 
 @Component({
@@ -150,9 +156,13 @@ export class MainTableComponent implements OnInit {
 
     editor = false;
 
+    mode: 'none' | 'new' | 'edit' = 'none';
+
     editorSectionId?: string;
 
     assignmentName: string = '';
+
+    editAssignment: Assignment | undefined;
 
     newMarks: number[] = [];
 
@@ -165,6 +175,7 @@ export class MainTableComponent implements OnInit {
             switch (e.type) {
                 case EventType.NEW_ROW_CREATED: {
                     this.editor = true;
+                    this.mode = 'new';
                     this.editorSectionId = (e as NewRowCreatedEvent).sectionId;
                     break;
                 }
@@ -186,6 +197,19 @@ export class MainTableComponent implements OnInit {
 
                     break;
                 }
+                case EventType.ROW_EDITED: {
+                    const event = (e as RowEditedEvent);
+
+                    this.editAssignment = this.appDataProvider.findAssigment(event.id);
+
+                    if (this.editAssignment) {
+                        this.editor = true;
+                        this.mode = 'edit';
+                        this.assignmentName = this.editAssignment.name;
+                    }
+
+                    break;
+                }
             }
         })
 
@@ -200,8 +224,16 @@ export class MainTableComponent implements OnInit {
     }
 
     cancel() {
-        if (this.editorSectionId) {
-            this.appDataProvider.cancelAddRow(this.editorSectionId);
+        if (this.mode == 'new') {
+            if (this.editorSectionId) {
+                this.appDataProvider.cancelAddRow(this.editorSectionId);
+            }
+        }
+
+        if (this.mode == 'edit') {
+            if (this.editAssignment) {
+                this.appDataProvider.cancelEditRow(this.editAssignment.id);
+            }
         }
 
         this.editor = false;

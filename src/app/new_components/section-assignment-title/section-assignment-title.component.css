@@ -1,9 +1,12 @@
-p {
-    background-color: lightgreen;
+.normal {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    height: 50px;
+    box-sizing: border-box;
 }
 
-#created {
-    border: burlywood solid 2px;
-    min-height: 50px;
-    box-sizing: border-box;
+.edit {
+    border: #0b5ee8 solid 4px;
+    background-color: #7eb4c2;
 }

@@ -25,6 +25,8 @@ export enum EventType {
     NEW_MARK_CREATED,
     NEW_MARK_CANCELED,
     POSITION,
+    ROW_EDITED,
+    CANCEL_ROW_EDITED
 
 }
 
@@ -61,23 +63,10 @@ export interface NewMarkCanceledEvent extends DataProviderEvent {
     offset: number;
 }
 
-export interface ClickTimeCell extends DataProviderEvent {
-    sectionId: string;
-    offset: number;
-    time: string;
-    step: number;
+export interface RowEditedEvent extends DataProviderEvent {
 }
 
-export interface ClickMark extends DataProviderEvent {
-    markId: string;
-    offset: number;
-    duration: number;
-}
-
-export interface CancelMark extends DataProviderEvent {
-    markId: string;
-    offset: number;
-    duration: number;
+export interface CancelRowEditedEvent extends DataProviderEvent {
 }
 
 export interface Positioning extends DataProviderEvent {
@@ -132,6 +121,10 @@ export abstract class DataProvider {
     abstract clickEmptyCell(id: string, sectionId: string, offset: number, time: string, step: number): void;
 
     abstract clickMark(markId: string): void;
+
+    abstract editRow(assignmentId: string): void;
+
+    abstract cancelEditRow(assignmentId: string): void;
 
     // ---
 
@@ -192,6 +185,30 @@ export abstract class DataProvider {
         } else {
             return mark;
         }
+    }
+
+    findAssigment(assignmentId: string): Assignment | undefined {
+        return this.getSections()
+            .flatMap(s => s.assignments)
+            .find(a => a.id == assignmentId);
+    }
+
+    findAssignmentByMark(markId: string): Assignment | undefined {
+        return this.getSections()
+            .flatMap(s => s.assignments)
+            .find(a => a.marks
+                .some(m => m.id == markId || m.marks?.some(sm => sm.id == markId)));
+    }
+
+    findAllMarksByAssignment(assignmentId: string) {
+        return this.getSections()
+            .flatMap(s => s.assignments
+                .filter(a => a.id == assignmentId)
+                .flatMap(a => a.marks))
+            .concat(this.getSections()
+                .flatMap(s => s.assignments
+                    .filter(a => a.id == assignmentId)
+                    .flatMap(a => a.marks.flatMap(m => m.marks || []))));
     }
 
 }

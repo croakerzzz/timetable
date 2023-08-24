@@ -1,5 +1,5 @@
-<div *ngIf="isNormal()">
+<div class="normal" [ngClass]="{'edit': editMode}" *ngIf="isNormalOrEdit()" (click)="edit()">
     <p>{{assignment ? assignment.name : ''}}</p>
 </div>
-<div id="created" *ngIf="isCreatedNotSaved()">
+<div class="normal edit" *ngIf="isCreatedNotSaved()">
 </div>

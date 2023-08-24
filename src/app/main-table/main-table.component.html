@@ -1,6 +1,6 @@
 <div>
-    <div *ngIf="editor">
-        <input type="text" [(ngModel)]="assignmentName" />
+    <div class="editor" *ngIf="editor">
+        <input [disabled]="mode == 'none' || mode == 'edit'"  type="text" [(ngModel)]="assignmentName" />
         <p>{{newMarks | json}}</p>
         <button (click)="add()">Добавить</button>
         <button (click)="cancel()">Отмена</button>

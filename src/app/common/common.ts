@@ -6,6 +6,7 @@ export enum AssignmentState {
     NORMAL,
     CREATED_NOT_SAVED,
     CREATED_SAVED,
+    EDITED,
 
 }
 
@@ -14,6 +15,8 @@ export enum MarkState {
     NORMAL,
     CREATED_NOT_SAVED,
     CREATED_SAVED,
+    CANCELED_NOT_SAVED,
+    CANCELED_SAVED
 
 }
 

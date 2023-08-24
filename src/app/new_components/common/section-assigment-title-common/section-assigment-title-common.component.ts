@@ -19,7 +19,7 @@ export class SectionAssigmentTitleCommonComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    initData(assignment: Assignment, dataProvider: DataProvider) {
+    initData(assignment: Assignment, dataProvider: DataProvider): void {
         this.assignment = assignment;
         this.dataProvider = dataProvider;
     }

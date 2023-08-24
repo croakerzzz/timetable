@@ -1,0 +1,7 @@
+.editor {
+    background-color: azure;
+}
+
+.editor input {
+    min-width: 500px;
+}

@@ -34,6 +34,14 @@ export class SectionTitleComponent extends SectionTitleCommonComponent implement
                     this.addButtonEnabled = true;
                     break;
                 }
+                case EventType.ROW_EDITED: {
+                    this.addButtonEnabled = false;
+                    break;
+                }
+                case EventType.CANCEL_ROW_EDITED: {
+                    this.addButtonEnabled = true;
+                    break;
+                }
             }
         })
     }
