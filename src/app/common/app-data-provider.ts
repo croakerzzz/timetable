@@ -542,4 +542,32 @@ export class AppDataProvider extends DataProvider {
 
     }
 
+    incScale(): void {
+        this.currentStep--;
+
+        this.events$.next({
+            id: '',
+            type: EventType.SCALE_CHANGED,
+            receiver: ReceiverType.EMPTY
+        });
+    }
+
+    decScale(): void {
+        this.currentStep++;
+
+        this.events$.next({
+            id: '',
+            type: EventType.SCALE_CHANGED,
+            receiver: ReceiverType.EMPTY
+        });
+    }
+
+    decScaleEnabled(): boolean {
+        return this.currentStep < this.steps.length - 1;
+    }
+
+    incScaleEnabled(): boolean {
+        return this.currentStep > 0;
+    }
+
 }

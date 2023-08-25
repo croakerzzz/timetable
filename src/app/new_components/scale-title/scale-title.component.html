@@ -1,1 +1,7 @@
-<h3>Заголовок</h3>
+<ng-container *ngIf="dataProvider">
+    <div>
+        <h3>Заголовок</h3>
+        <button [disabled]="!dataProvider.incScaleEnabled()" (click)="incScale()">+</button>
+        <button [disabled]="!dataProvider.decScaleEnabled()" (click)="decScale()">-</button>
+    </div>
+</ng-container>

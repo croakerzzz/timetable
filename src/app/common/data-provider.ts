@@ -26,7 +26,8 @@ export enum EventType {
     NEW_MARK_CANCELED,
     POSITION,
     ROW_EDITED,
-    CANCEL_ROW_EDITED
+    CANCEL_ROW_EDITED,
+    SCALE_CHANGED
 
 }
 
@@ -127,6 +128,14 @@ export abstract class DataProvider {
     abstract cancelEditRow(assignmentId: string): void;
 
     // ---
+
+    abstract incScale(): void;
+
+    abstract decScale(): void;
+
+    abstract incScaleEnabled(): boolean;
+
+    abstract decScaleEnabled(): boolean;
 
     get events(): Observable<DataProviderEvent> {
         return this.events$.asObservable();

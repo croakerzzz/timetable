@@ -8,7 +8,7 @@ import {
     OnInit,
     QueryList
 } from '@angular/core';
-import {DataProvider, GridCell} from "../common/data-provider";
+import {DataProvider, EventType, GridCell} from "../common/data-provider";
 import {toNumber} from "ng-zorro-antd/core/util";
 import {ScaleTitleDirective} from "../directivies/scale-title-directive";
 import {SectionDirective} from "../directivies/section-directive";
@@ -66,6 +66,17 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.refresh();
+
+        this.dataProvider.events.subscribe(e => {
+
+            switch (e.type) {
+                case EventType.SCALE_CHANGED: {
+                    this.refresh();
+                    break;
+                }
+            }
+
+        });
     }
 
     getScaleTitleRowName(gridCellIndex: number): string {

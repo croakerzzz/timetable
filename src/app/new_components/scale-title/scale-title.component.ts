@@ -18,4 +18,11 @@ export class ScaleTitleComponent extends ScaleTitleCommonComponent implements On
         super.ngOnInit();
     }
 
+    incScale() {
+        this.dataProvider.incScale();
+    }
+
+    decScale() {
+        this.dataProvider.decScale();
+    }
 }

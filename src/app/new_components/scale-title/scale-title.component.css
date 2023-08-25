@@ -1,0 +1,13 @@
+div {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+h3 {
+    margin-right: 20px;
+}
+
+button {
+    margin-left: 5px;
+}
