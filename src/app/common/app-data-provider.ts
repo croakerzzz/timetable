@@ -138,6 +138,10 @@ export class AppDataProvider extends DataProvider {
 
                         if (mark) {
                             switch (mark.state) {
+                                case MarkState.CREATED_NOT_SAVED: {
+                                    this.deleteMark(assignment, mark);
+                                    break;
+                                }
                                 case MarkState.NORMAL: {
                                     mark.state = MarkState.CANCELED_NOT_SAVED;
                                     break;
