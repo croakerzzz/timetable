@@ -49,6 +49,8 @@ export class AppDataProvider extends DataProvider {
 
     stepCells = this.steps[this.currentStep].minutes / this.gridCellStep;
 
+    openedMark: Mark | null = null;
+
     constructor(private sections: TableSection[]) {
         super();
 
@@ -470,7 +472,7 @@ export class AppDataProvider extends DataProvider {
         }
     }
 
-    private createMark(assignment: Assignment, offset: number, duration: number): void {
+    private createMark(assignment: Assignment, offset: number, duration: number): Mark {
         const newMark = {
             id: assignment.id + '#new_mark#' + offset,
             offset: offset,
@@ -494,9 +496,11 @@ export class AppDataProvider extends DataProvider {
                 assignmentId: assignment.id,
             } as NewMarkCreatedEvent);
         });
+
+        return newMark;
     }
 
-    clickEmptyCell(id: string, sectionId: string, assignmentId: string, offset: number, time: string, step: number): void {
+    clickEmptyCell(id: string, sectionId: string, assignmentId: string, offset: number, time: string, step: number, shiftKey: boolean): void {
         const assignment = this.findAssigment(assignmentId);
 
         // const newAssigment = this.sections
@@ -505,22 +509,33 @@ export class AppDataProvider extends DataProvider {
 
         if (assignment) {
 
-            switch (assignment.state) {
-                case AssignmentState.CREATED_NOT_SAVED: {
-                    this.createMark(assignment, offset, 60);
-                    break;
-                }
+            if (assignment.state === AssignmentState.NORMAL) {
+                this.editRow(assignmentId);
+            }
 
-                case AssignmentState.NORMAL: {
-                    this.editRow(assignmentId);
-                    this.createMark(assignment, offset, 60);
-                    break;
-                }
+            if (shiftKey) {
+                if (this.openedMark == null) {
+                    this.openedMark = this.createMark(assignment, offset, 60);
+                } else {
+                    console.log(this.openedMark);
+                    console.log(offset);
 
-                case AssignmentState.EDITED: {
-                    this.createMark(assignment, offset, 60);
-                    break;
+                    this.openedMark.duration = offset - this.openedMark.offset + this.steps[this.currentStep].minutes;
+
+                    setTimeout(() => {
+                        if (this.openedMark != null) {
+                            this.sendPosition(
+                                this.openedMark.id,
+                                ReceiverType.MARK,
+                                this.getSectionCellPosition(this.openedMark.id)
+                            );
+
+                            this.openedMark = null;
+                        }
+                    });
                 }
+            } else {
+                this.createMark(assignment, offset, 60);
             }
 
         }

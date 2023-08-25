@@ -31,7 +31,8 @@
 </ng-template>
 
 <ng-template #timeTableRow let-row="row" let-sectionId="sectionId" let-assignmentId="assignmentId">
-    <div *ngFor="let timeCell of times; let i = index;" class="time-cell" (click)="clickTimeCell(sectionId,
+    <div *ngFor="let timeCell of times; let i = index;" class="time-cell"
+         (click)="clickTimeCell($event, sectionId,
                     assignmentId,
                     i * dataProvider.stepCells)"
          [style.grid-row-start]="row"

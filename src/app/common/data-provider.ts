@@ -118,7 +118,7 @@ export abstract class DataProvider {
 
     abstract applyAddRow(sectionId: string, name: string): void;
 
-    abstract clickEmptyCell(id: string, sectionId: string, assignmentId: string, offset: number, time: string, step: number): void;
+    abstract clickEmptyCell(id: string, sectionId: string, assignmentId: string, offset: number, time: string, step: number, shiftKey: boolean): void;
 
     abstract clickMark(markId: string): void;
 

@@ -109,14 +109,15 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
         return this.countPrevAssignmentRow(sectionIndex) + assignmentIndex + 2;
     }
 
-    clickTimeCell(sectionId: string, assignmentId: string, timeCell: number) {
+    clickTimeCell($event: MouseEvent, sectionId: string, assignmentId: string, timeCell: number) {
         this.dataProvider.clickEmptyCell(
             "",
             sectionId,
             assignmentId,
             this.gridCells[timeCell].offset,
             this.gridCells[timeCell].title,
-            this.dataProvider.steps[this.dataProvider.currentStep].minutes
+            this.dataProvider.steps[this.dataProvider.currentStep].minutes,
+            $event.shiftKey
         );
     }
 
