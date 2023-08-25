@@ -111,7 +111,8 @@ export class AppDataProvider extends DataProvider {
                         const mark = marks.find(m => m.id == markId);
 
                         if (mark && mark.state === MarkState.CREATED_NOT_SAVED) {
-                            assignment.marks.splice(assignment.marks.indexOf(mark), 1);
+                            this.deleteMark(assignment, mark);
+                            // assignment.marks.splice(assignment.marks.indexOf(mark), 1);
 
                             setTimeout(() => {
                                 this.events$.next({
@@ -253,6 +254,10 @@ export class AppDataProvider extends DataProvider {
         }
     }
 
+    private deleteMark(assignment: Assignment, mark: Mark) {
+        assignment.marks.splice(assignment.marks.indexOf(mark), 1);
+    }
+
     override cancelEditRow(assignmentId: string): void {
         const assignment = this.findAssigment(assignmentId);
 
@@ -265,6 +270,10 @@ export class AppDataProvider extends DataProvider {
             marks.forEach(m => {
                 if (m.state === MarkState.CANCELED_NOT_SAVED) {
                     m.state = MarkState.NORMAL;
+                }
+
+                if (m.state === MarkState.CREATED_NOT_SAVED) {
+                    this.deleteMark(assignment, m);
                 }
             })
 
@@ -461,37 +470,58 @@ export class AppDataProvider extends DataProvider {
         }
     }
 
-    clickEmptyCell(id: string, sectionId: string, offset: number, time: string, step: number): void {
-        const newAssigment = this.sections
-            .flatMap(s => s.assignments)
-            .find(a => a.state === AssignmentState.CREATED_NOT_SAVED);
+    private createMark(assignment: Assignment, offset: number, duration: number): void {
+        const newMark = {
+            id: assignment.id + '#new_mark#' + offset,
+            offset: offset,
+            duration: duration,
+            state: MarkState.CREATED_NOT_SAVED,
+            marks: [],
+        };
 
-        if (newAssigment) {
+        assignment.marks.push(newMark);
 
-            const newMark = {
-                id: newAssigment.id + '#new_mark#' + offset,
-                offset: offset,
-                duration: 60,
-                state: MarkState.CREATED_NOT_SAVED,
-                marks: [],
-            };
+        setTimeout(() => {
+            this.sendPosition(
+                newMark.id,
+                ReceiverType.MARK,
+                this.getSectionCellPosition(newMark.id)
+            );
 
-            newAssigment.marks.push(newMark);
+            this.events$.next({
+                id: newMark.id,
+                type: EventType.NEW_MARK_CREATED,
+                assignmentId: assignment.id,
+            } as NewMarkCreatedEvent);
+        });
+    }
 
-            setTimeout(() => {
-                this.sendPosition(
-                    newMark.id,
-                    ReceiverType.MARK,
-                    this.getSectionCellPosition(newMark.id)
-                );
+    clickEmptyCell(id: string, sectionId: string, assignmentId: string, offset: number, time: string, step: number): void {
+        const assignment = this.findAssigment(assignmentId);
 
-                this.events$.next({
-                    id: newMark.id,
-                    type: EventType.NEW_MARK_CREATED,
-                    assignmentId: newAssigment.id,
-                } as NewMarkCreatedEvent);
-            });
+        // const newAssigment = this.sections
+        //     .flatMap(s => s.assignments)
+        //     .find(a => a.state === AssignmentState.CREATED_NOT_SAVED);
 
+        if (assignment) {
+
+            switch (assignment.state) {
+                case AssignmentState.CREATED_NOT_SAVED: {
+                    this.createMark(assignment, offset, 60);
+                    break;
+                }
+
+                case AssignmentState.NORMAL: {
+                    this.editRow(assignmentId);
+                    this.createMark(assignment, offset, 60);
+                    break;
+                }
+
+                case AssignmentState.EDITED: {
+                    this.createMark(assignment, offset, 60);
+                    break;
+                }
+            }
 
         }
 
