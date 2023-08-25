@@ -31,16 +31,16 @@ export class SectionAssignmentTitleComponent extends SectionAssigmentTitleCommon
         this.dataProvider.events.subscribe(e => {
             switch (e.type) {
                 case EventType.ROW_EDITED: {
-                    if (e.id != this.assignment.id) {
-                        this.lockEdit = true;
+                    this.lockEdit = true;
+                    if (e.id == this.assignment.id) {
+                        this.editMode = true;
                     }
                     break;
                 }
                 case EventType.CANCEL_ROW_EDITED: {
+                    this.lockEdit = false;
                     if (e.id == this.assignment.id) {
                         this.editMode = false;
-                    } else {
-                        this.lockEdit = false;
                     }
                     break;
                 }
@@ -58,7 +58,6 @@ export class SectionAssignmentTitleComponent extends SectionAssigmentTitleCommon
 
     edit() {
         if (!this.lockEdit) {
-            this.editMode = true;
             this.dataProvider.editRow(this.assignment.id);
         }
     }

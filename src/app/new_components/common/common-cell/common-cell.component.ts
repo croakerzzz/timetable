@@ -22,12 +22,6 @@ export class CommonCellComponent implements OnInit, OnChanges, AfterContentInit 
     }
 
     ngOnInit(): void {
-        //
-        // console.log('**********************************************************');
-        //
-        // this.text1.subscribe(v => {
-        //    console.log(';;;;;;;;;;;;;;;;;;;;;;;;', v);
-        // });
     }
 
     ngOnChanges(changes: SimpleChanges): void {

@@ -153,6 +153,27 @@ export class AppDataProvider extends DataProvider {
                 }
 
                 case AssignmentState.NORMAL: {
+                    this.editRow(assignment.id);
+
+                    if (!parent) {
+                        const mark = marks.find(m => m.id == markId);
+
+                        if (mark) {
+                            switch (mark.state) {
+                                case MarkState.NORMAL: {
+                                    mark.state = MarkState.CANCELED_NOT_SAVED;
+                                    break;
+                                }
+                                case MarkState.CANCELED_NOT_SAVED: {
+                                    mark.state = MarkState.NORMAL;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+
+                    }
+
                     break;
                 }
             }
