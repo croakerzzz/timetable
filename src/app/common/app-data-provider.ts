@@ -175,7 +175,9 @@ export class AppDataProvider extends DataProvider {
                         }
                     }, (markState) => {
                         if (assignment.state === AssignmentState.AUTO_EDITED) {
-                            if (markState === MarkState.CANCELED_NOT_SAVED) {
+                            if (this.findAllMarksByAssignment(assignment.id)
+                                .every(m => m.state != MarkState.CREATED_NOT_SAVED
+                                    && m.state != MarkState.CANCELED_NOT_SAVED)) {
                                 this.cancelEditRow(assignment.id);
                             }
                         }
@@ -525,10 +527,6 @@ export class AppDataProvider extends DataProvider {
 
     clickEmptyCell(id: string, sectionId: string, assignmentId: string, offset: number, time: string, step: number, shiftKey: boolean): void {
         const assignment = this.findAssigment(assignmentId);
-
-        // const newAssigment = this.sections
-        //     .flatMap(s => s.assignments)
-        //     .find(a => a.state === AssignmentState.CREATED_NOT_SAVED);
 
         if (assignment) {
 

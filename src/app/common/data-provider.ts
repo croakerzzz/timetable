@@ -213,7 +213,8 @@ export abstract class DataProvider {
         return this.getSections()
             .flatMap(s => s.assignments
                 .filter(a => a.id == assignmentId)
-                .flatMap(a => a.marks))
+                .flatMap(a => a.marks)
+                .filter(m => !m.marks || m.marks.length == 0))
             .concat(this.getSections()
                 .flatMap(s => s.assignments
                     .filter(a => a.id == assignmentId)
