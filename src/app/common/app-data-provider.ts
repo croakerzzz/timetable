@@ -106,12 +106,38 @@ export class AppDataProvider extends DataProvider {
 
         const assignment = this.findAssignmentByMark(markId);
 
+        const markMainFunc = (markFunc: (mark: Mark) => void, after?: (markState: MarkState) => void) => {
+            if (!parent) {
+                const mark = marks.find(m => m.id == markId);
+
+                if (mark) {
+                    const markState = mark.state;
+
+                    markFunc(mark);
+
+                    if (after) {
+                        after(markState);
+                    }
+                }
+            } else {
+                if (parent.marks && parent.marks.length > 0) {
+                    const markState = parent.marks[0].state;
+
+                    parent.marks.forEach(m => {
+                        markFunc(m);
+                    })
+
+                    if (after) {
+                        after(markState);
+                    }
+                }
+            }
+        };
+
         if (assignment) {
             switch (assignment.state) {
                 case AssignmentState.CREATED_NOT_SAVED: {
-                    if (!parent) {
-                        const mark = marks.find(m => m.id == markId);
-
+                    markMainFunc((mark) => {
                         if (mark && mark.state === MarkState.CREATED_NOT_SAVED) {
                             this.deleteMark(assignment, mark);
                             // assignment.marks.splice(assignment.marks.indexOf(mark), 1);
@@ -125,61 +151,54 @@ export class AppDataProvider extends DataProvider {
                                 } as NewMarkCanceledEvent);
                             })
                         }
-                    } else {
-                        const mark = parent?.marks?.find(m => m.id == markId);
-                    }
+                    });
 
                     break;
                 }
 
-                case AssignmentState.EDITED: {
-                    if (!parent) {
-                        const mark = marks.find(m => m.id == markId);
-
-                        if (mark) {
-                            switch (mark.state) {
-                                case MarkState.CREATED_NOT_SAVED: {
-                                    this.deleteMark(assignment, mark);
-                                    break;
-                                }
-                                case MarkState.NORMAL: {
-                                    mark.state = MarkState.CANCELED_NOT_SAVED;
-                                    break;
-                                }
-                                case MarkState.CANCELED_NOT_SAVED: {
-                                    mark.state = MarkState.NORMAL;
-                                    break;
-                                }
+                case AssignmentState.EDITED:
+                case AssignmentState.AUTO_EDITED: {
+                    markMainFunc((mark) => {
+                        switch (mark.state) {
+                            case MarkState.CREATED_NOT_SAVED: {
+                                this.deleteMark(assignment, mark);
+                                break;
+                            }
+                            case MarkState.NORMAL: {
+                                mark.state = MarkState.CANCELED_NOT_SAVED;
+                                break;
+                            }
+                            case MarkState.CANCELED_NOT_SAVED: {
+                                mark.state = MarkState.NORMAL;
+                                break;
                             }
                         }
-                    } else {
-
-                    }
+                    }, (markState) => {
+                        if (assignment.state === AssignmentState.AUTO_EDITED) {
+                            if (markState === MarkState.CANCELED_NOT_SAVED) {
+                                this.cancelEditRow(assignment.id);
+                            }
+                        }
+                    });
 
                     break;
                 }
 
                 case AssignmentState.NORMAL: {
-                    this.editRow(assignment.id);
+                    this.editRow(assignment.id, true);
 
-                    if (!parent) {
-                        const mark = marks.find(m => m.id == markId);
-
-                        if (mark) {
-                            switch (mark.state) {
-                                case MarkState.NORMAL: {
-                                    mark.state = MarkState.CANCELED_NOT_SAVED;
-                                    break;
-                                }
-                                case MarkState.CANCELED_NOT_SAVED: {
-                                    mark.state = MarkState.NORMAL;
-                                    break;
-                                }
+                    markMainFunc((mark) => {
+                        switch (mark.state) {
+                            case MarkState.NORMAL: {
+                                mark.state = MarkState.CANCELED_NOT_SAVED;
+                                break;
+                            }
+                            case MarkState.CANCELED_NOT_SAVED: {
+                                mark.state = MarkState.NORMAL;
+                                break;
                             }
                         }
-                    } else {
-
-                    }
+                    });
 
                     break;
                 }
@@ -243,12 +262,12 @@ export class AppDataProvider extends DataProvider {
         }
     }
 
-    override editRow(assignmentId: string): void {
+    override editRow(assignmentId: string, auto: boolean): void {
         const assignment = this.findAssigment(assignmentId);
 
         if (assignment) {
 
-            assignment.state = AssignmentState.EDITED;
+            assignment.state = auto ? AssignmentState.AUTO_EDITED : AssignmentState.EDITED;
 
             setTimeout(() => {
                 this.events$.next({
@@ -514,7 +533,7 @@ export class AppDataProvider extends DataProvider {
         if (assignment) {
 
             if (assignment.state === AssignmentState.NORMAL) {
-                this.editRow(assignmentId);
+                this.editRow(assignmentId, true);
             }
 
             if (shiftKey) {

@@ -49,7 +49,11 @@ export class SectionAssignmentTitleComponent extends SectionAssigmentTitleCommon
     }
 
     isNormalOrEdit(): boolean {
-        return this.assignment ? (this.assignment.state == AssignmentState.NORMAL || this.assignment.state == AssignmentState.EDITED) : true;
+        return this.assignment
+            ? (this.assignment.state == AssignmentState.NORMAL
+                || this.assignment.state == AssignmentState.EDITED
+                || this.assignment.state == AssignmentState.AUTO_EDITED)
+            : true;
     }
 
     isCreatedNotSaved(): boolean {
@@ -58,7 +62,7 @@ export class SectionAssignmentTitleComponent extends SectionAssigmentTitleCommon
 
     edit() {
         if (!this.lockEdit) {
-            this.dataProvider.editRow(this.assignment.id);
+            this.dataProvider.editRow(this.assignment.id, false);
         }
     }
 }

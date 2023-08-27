@@ -7,6 +7,7 @@ export enum AssignmentState {
     CREATED_NOT_SAVED,
     CREATED_SAVED,
     EDITED,
+    AUTO_EDITED// режим редактирования через нажатие на ячейку
 
 }
 

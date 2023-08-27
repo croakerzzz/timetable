@@ -123,7 +123,7 @@ export abstract class DataProvider {
 
     abstract clickMark(markId: string): void;
 
-    abstract editRow(assignmentId: string): void;
+    abstract editRow(assignmentId: string, auto: boolean): void;
 
     abstract cancelEditRow(assignmentId: string): void;
 

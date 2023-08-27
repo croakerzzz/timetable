@@ -210,6 +210,12 @@ export class MainTableComponent implements OnInit {
 
                     break;
                 }
+                case EventType.CANCEL_ROW_EDITED: {
+                    this.editor = false;
+                    this.mode = "none";
+
+                    break;
+                }
             }
         })
 
