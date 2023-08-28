@@ -63,16 +63,23 @@ export class AppDataProvider extends DataProvider {
         return this.sections_;
     }
 
-    currentHour: number | null = null;
+    currentHour!: number;
+
+    countCurrentHour(): void {
+        const date = new Date();
+
+        const minutes = date.getHours() * 60 + date.getMinutes();
+
+        this.currentHour = Math.floor(minutes / this.steps[this.currentStep].minutes) * this.steps[this.currentStep].minutes;
+    }
 
     constructor() {
         super();
 
+        this.countCurrentHour();
+
         setInterval(() => {
-            if (!this.currentHour) {
-                this.currentHour = new Date().getHours();
-                console.log(this.currentHour - 2);
-            }
+            this.countCurrentHour();
         }, 1000)
     }
 
@@ -433,6 +440,8 @@ export class AppDataProvider extends DataProvider {
     incScale(): void {
         this.currentStep--;
 
+        this.countCurrentHour();
+
         this.events$.next({
             id: '',
             type: EventType.SCALE_CHANGED,
@@ -442,6 +451,8 @@ export class AppDataProvider extends DataProvider {
 
     decScale(): void {
         this.currentStep++;
+
+        this.countCurrentHour();
 
         this.events$.next({
             id: '',
