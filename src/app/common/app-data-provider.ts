@@ -12,7 +12,7 @@ import {
     Step
 } from "./data-provider";
 import {Assignment, AssignmentState, Mark, MarkState, TableSection} from "./common";
-import {Injectable, OnInit} from "@angular/core";
+import {Injectable} from "@angular/core";
 
 @Injectable()
 export class AppDataProvider extends DataProvider {
@@ -486,10 +486,25 @@ export class AppDataProvider extends DataProvider {
                 if (this.openedMark == null) {
                     this.openedMark = this.createMark(assignment, offset, 60);
                 } else {
-                    console.log(this.openedMark);
-                    console.log(offset);
-
                     this.openedMark.duration = offset - this.openedMark.offset + this.steps[this.currentStep].minutes;
+
+                    const subMarks = assignment.marks.filter(m => this.openedMark
+                        && m.id != this.openedMark.id
+                        && m.offset >= this.openedMark?.offset
+                        && (m.offset + m.duration) <= (this.openedMark?.offset + this.openedMark?.duration));
+
+                    console.log(subMarks);
+
+                    if (subMarks.length > 0) {
+                        if (subMarks.every(m => m.state === MarkState.CREATED_NOT_SAVED)) {
+                            subMarks.forEach(m => {
+                                this.deleteMark(assignment, m);
+                            })
+                        } else {
+                            this.deleteMark(assignment, this.openedMark);
+                            this.openedMark = null;
+                        }
+                    }
 
                     setTimeout(() => {
                         if (this.openedMark != null) {
