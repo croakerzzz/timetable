@@ -38,14 +38,13 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
 
     times: string[] = [];
 
-    zeroTime: string = '07:00';
-
     constructor() {
     }
 
     refresh(): void {
         let date = new Date();
-        date.setHours(toNumber(this.zeroTime.split(":")[0]), toNumber(this.zeroTime.split(":")[1]), 0, 0);
+        date.setHours(toNumber(this.dataProvider.zeroTime.split(":")[0]),
+            toNumber(this.dataProvider.zeroTime.split(":")[1]), 0, 0);
         for (let i = 0; i < (60 / this.gridCellStep) * 24; i++) {
             this.gridCells.push({offset: i * this.gridCellStep, title: date.toTimeString().substring(0, 5)});
             date.setMinutes(date.getMinutes() + this.gridCellStep);
@@ -133,12 +132,23 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
     }
 
     isCurrentHour(time: string): boolean {
-        const zeroParts = this.zeroTime.split(":");
+        const zeroParts = this.dataProvider.zeroTime.split(":");
 
-        const minutes = Number.parseInt(time) * this.dataProvider.steps[this.dataProvider.currentStep].minutes
-            + Number.parseInt(zeroParts[0]) * 60 + Number.parseInt(zeroParts[1]);
+        const zeroMinutes = Number.parseInt(zeroParts[0]) * 60 + Number.parseInt(zeroParts[1]);
 
-        return minutes == this.dataProvider.currentHour;
+        const prevMinutes = 24 * 60 - zeroMinutes;
+
+        const minutes = Number.parseInt(time) * this.dataProvider.steps[this.dataProvider.currentStep].minutes;
+
+        if (zeroMinutes > 0) {
+            if (this.dataProvider.currentHour < zeroMinutes) {
+                return minutes == this.dataProvider.currentHour + prevMinutes;
+            } else {
+                return minutes + zeroMinutes == this.dataProvider.currentHour;
+            }
+        } else {
+            return minutes == this.dataProvider.currentHour;
+        }
     }
 
 }

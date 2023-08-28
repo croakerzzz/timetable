@@ -223,4 +223,8 @@ export abstract class DataProvider {
 
     abstract get currentHour(): number;
 
+    abstract getCurrentHourOffset(): number
+
+    abstract get zeroTime(): string;
+
 }

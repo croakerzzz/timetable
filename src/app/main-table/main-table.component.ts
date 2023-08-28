@@ -39,6 +39,51 @@ export class MainTableComponent implements OnInit {
                             state: MarkState.NORMAL,
                         }
                     ]
+                },
+                {
+                    id: "1_1",
+                    name: "Гелофузин р-р д/инф. 500 мл 500",
+                    state: AssignmentState.NORMAL,
+                    marks: [
+                        {
+                            id: "1_1",
+                            offset: 7 * 60,
+                            duration: 5 * 60,
+                            state: MarkState.NORMAL,
+                            marks: [
+                                {
+                                    id: "1_1_1",
+                                    offset: 7 * 60,
+                                    duration: 60,
+                                    state: MarkState.NORMAL,
+                                },
+                                {
+                                    id: "1_1_2",
+                                    offset: 8 * 60,
+                                    duration: 60,
+                                    state: MarkState.NORMAL,
+                                },
+                                {
+                                    id: "1_1_3",
+                                    offset: 9 * 60,
+                                    duration: 60,
+                                    state: MarkState.NORMAL,
+                                },
+                                {
+                                    id: "1_1_4",
+                                    offset: 10 * 60,
+                                    duration: 60,
+                                    state: MarkState.NORMAL,
+                                },
+                                {
+                                    id: "1_1_5",
+                                    offset: 11 * 60,
+                                    duration: 60,
+                                    state: MarkState.NORMAL,
+                                },
+                            ]
+                        },
+                    ]
                 }
             ]
         },
@@ -55,6 +100,12 @@ export class MainTableComponent implements OnInit {
                             id: "3",
                             offset: 360,
                             duration: 90,
+                            state: MarkState.NORMAL,
+                        },
+                        {
+                            id: "3_1",
+                            offset: (16 - 7) * 60 + 15,
+                            duration: 60,
                             state: MarkState.NORMAL,
                         }
                     ]

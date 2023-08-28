@@ -65,12 +65,36 @@ export class AppDataProvider extends DataProvider {
 
     currentHour!: number;
 
+    get zeroTime(): string {
+        return "07:00";
+    }
+
     countCurrentHour(): void {
-        const date = new Date();
+        this.currentHour = 16 * 60;
 
-        const minutes = date.getHours() * 60 + date.getMinutes();
+        // const date = new Date();
+        //
+        // const minutes = date.getHours() * 60 + date.getMinutes();
+        //
+        // this.currentHour = Math.floor(minutes / this.steps[this.currentStep].minutes) * this.steps[this.currentStep].minutes;
+    }
 
-        this.currentHour = Math.floor(minutes / this.steps[this.currentStep].minutes) * this.steps[this.currentStep].minutes;
+    getCurrentHourOffset(): number {
+        const zeroParts = this.zeroTime.split(":");
+
+        const zeroMinutes = Number.parseInt(zeroParts[0]) * 60 + Number.parseInt(zeroParts[1]);
+
+        const prevMinutes = 24 * 60 - zeroMinutes;
+
+        if (zeroMinutes > 0) {
+            if (this.currentHour < zeroMinutes) {
+                return this.currentHour + prevMinutes;
+            } else {
+                return this.currentHour - zeroMinutes;
+            }
+        } else {
+            return this.currentHour;
+        }
     }
 
     constructor() {
@@ -105,21 +129,6 @@ export class AppDataProvider extends DataProvider {
     getSections(): TableSection[] {
         return this.sections;
     }
-
-    // override addRow(id: string, sectionId: string) {
-    //     const section = this.sections.find(s => s.id === sectionId);
-    //
-    //     if (section) {
-    //         section.assignments.unshift({
-    //             id: '',
-    //             name: '',
-    //             isEdit: true,
-    //             marks: []
-    //         })
-    //     }
-    //
-    //     super.addRow(id, sectionId);
-    // }
 
     override getSectionTitlePosition(sectionId: string): GridPosition {
         let row = 2;
@@ -336,7 +345,6 @@ export class AppDataProvider extends DataProvider {
             });
 
         });
-
     }
 
     addRow(sectionId: string): void {
@@ -493,8 +501,6 @@ export class AppDataProvider extends DataProvider {
                         && m.offset >= this.openedMark?.offset
                         && (m.offset + m.duration) <= (this.openedMark?.offset + this.openedMark?.duration));
 
-                    console.log(subMarks);
-
                     if (subMarks.length > 0) {
                         if (subMarks.every(m => m.state === MarkState.CREATED_NOT_SAVED)) {
                             subMarks.forEach(m => {
@@ -548,14 +554,18 @@ export class AppDataProvider extends DataProvider {
                 }
             } else {
                 if (parent.marks && parent.marks.length > 0) {
-                    const markState = parent.marks[0].state;
+                    const clickedMark = this.findMark(markId);
 
-                    parent.marks.forEach(m => {
-                        markFunc(m);
-                    })
+                    if (clickedMark && clickedMark.offset > this.getCurrentHourOffset()) {
+                        const markState = parent.marks[0].state;
 
-                    if (after) {
-                        after(markState);
+                        parent.marks.filter(m => m.offset >= clickedMark.offset).forEach(m => {
+                            markFunc(m);
+                        })
+
+                        if (after) {
+                            after(markState);
+                        }
                     }
                 }
             }
@@ -614,20 +624,24 @@ export class AppDataProvider extends DataProvider {
                 }
 
                 case AssignmentState.NORMAL: {
-                    this.editRow(assignment.id, true);
+                    const clickedMark = this.findMark(markId);
 
-                    markMainFunc((mark) => {
-                        switch (mark.state) {
-                            case MarkState.NORMAL: {
-                                mark.state = MarkState.CANCELED_NOT_SAVED;
-                                break;
+                    if (clickedMark && clickedMark.offset > this.getCurrentHourOffset()) {
+                        this.editRow(assignment.id, true);
+
+                        markMainFunc((mark) => {
+                            switch (mark.state) {
+                                case MarkState.NORMAL: {
+                                    mark.state = MarkState.CANCELED_NOT_SAVED;
+                                    break;
+                                }
+                                case MarkState.CANCELED_NOT_SAVED: {
+                                    mark.state = MarkState.NORMAL;
+                                    break;
+                                }
                             }
-                            case MarkState.CANCELED_NOT_SAVED: {
-                                mark.state = MarkState.NORMAL;
-                                break;
-                            }
-                        }
-                    });
+                        });
+                    }
 
                     break;
                 }
