@@ -5,3 +5,7 @@
 .editor input {
     min-width: 500px;
 }
+
+.header {
+    height: 92px;
+}

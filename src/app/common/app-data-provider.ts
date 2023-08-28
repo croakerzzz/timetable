@@ -12,7 +12,9 @@ import {
     Step
 } from "./data-provider";
 import {Assignment, AssignmentState, Mark, MarkState, TableSection} from "./common";
+import {Injectable, OnInit} from "@angular/core";
 
+@Injectable()
 export class AppDataProvider extends DataProvider {
 
     steps: Step[] = [
@@ -51,14 +53,27 @@ export class AppDataProvider extends DataProvider {
 
     openedMark: Mark | null = null;
 
-    constructor(private sections: TableSection[]) {
+    sections_: TableSection[] = [];
+
+    set sections(sections: TableSection[]) {
+        this.sections_ = sections;
+    }
+
+    get sections(): TableSection[] {
+        return this.sections_;
+    }
+
+    currentHour: number | null = null;
+
+    constructor() {
         super();
 
-        this.events$.subscribe(e => {
-            // if (e.type === EventType.POSITION && e.receiver === ReceiverType.ASSIGNMENT) {
-            //     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> event: ', e);
-            // }
-        });
+        setInterval(() => {
+            if (!this.currentHour) {
+                this.currentHour = new Date().getHours();
+                console.log(this.currentHour - 2);
+            }
+        }, 1000)
     }
 
     getAssignments(sectionId: string): Assignment[] {
@@ -98,116 +113,6 @@ export class AppDataProvider extends DataProvider {
     //
     //     super.addRow(id, sectionId);
     // }
-
-    override clickMark(markId: string) {
-        const marks = this.sections.flatMap(s => s.assignments.flatMap(a => a.marks));
-
-        const parent = marks.find(m => m.marks && m.marks.some(sm => sm.id === markId));
-
-        const assignment = this.findAssignmentByMark(markId);
-
-        const markMainFunc = (markFunc: (mark: Mark) => void, after?: (markState: MarkState) => void) => {
-            if (!parent) {
-                const mark = marks.find(m => m.id == markId);
-
-                if (mark) {
-                    const markState = mark.state;
-
-                    markFunc(mark);
-
-                    if (after) {
-                        after(markState);
-                    }
-                }
-            } else {
-                if (parent.marks && parent.marks.length > 0) {
-                    const markState = parent.marks[0].state;
-
-                    parent.marks.forEach(m => {
-                        markFunc(m);
-                    })
-
-                    if (after) {
-                        after(markState);
-                    }
-                }
-            }
-        };
-
-        if (assignment) {
-            switch (assignment.state) {
-                case AssignmentState.CREATED_NOT_SAVED: {
-                    markMainFunc((mark) => {
-                        if (mark && mark.state === MarkState.CREATED_NOT_SAVED) {
-                            this.deleteMark(assignment, mark);
-                            // assignment.marks.splice(assignment.marks.indexOf(mark), 1);
-
-                            setTimeout(() => {
-                                this.events$.next({
-                                    id: mark.id,
-                                    type: EventType.NEW_MARK_CANCELED,
-                                    assignmentId: assignment.id,
-                                    offset: mark.offset,
-                                } as NewMarkCanceledEvent);
-                            })
-                        }
-                    });
-
-                    break;
-                }
-
-                case AssignmentState.EDITED:
-                case AssignmentState.AUTO_EDITED: {
-                    markMainFunc((mark) => {
-                        switch (mark.state) {
-                            case MarkState.CREATED_NOT_SAVED: {
-                                this.deleteMark(assignment, mark);
-                                break;
-                            }
-                            case MarkState.NORMAL: {
-                                mark.state = MarkState.CANCELED_NOT_SAVED;
-                                break;
-                            }
-                            case MarkState.CANCELED_NOT_SAVED: {
-                                mark.state = MarkState.NORMAL;
-                                break;
-                            }
-                        }
-                    }, (markState) => {
-                        if (assignment.state === AssignmentState.AUTO_EDITED) {
-                            if (this.findAllMarksByAssignment(assignment.id)
-                                .every(m => m.state != MarkState.CREATED_NOT_SAVED
-                                    && m.state != MarkState.CANCELED_NOT_SAVED)) {
-                                this.cancelEditRow(assignment.id);
-                            }
-                        }
-                    });
-
-                    break;
-                }
-
-                case AssignmentState.NORMAL: {
-                    this.editRow(assignment.id, true);
-
-                    markMainFunc((mark) => {
-                        switch (mark.state) {
-                            case MarkState.NORMAL: {
-                                mark.state = MarkState.CANCELED_NOT_SAVED;
-                                break;
-                            }
-                            case MarkState.CANCELED_NOT_SAVED: {
-                                mark.state = MarkState.NORMAL;
-                                break;
-                            }
-                        }
-                    });
-
-                    break;
-                }
-            }
-        }
-
-    }
 
     override getSectionTitlePosition(sectionId: string): GridPosition {
         let row = 2;
@@ -525,6 +430,38 @@ export class AppDataProvider extends DataProvider {
         return newMark;
     }
 
+    incScale(): void {
+        this.currentStep--;
+
+        this.events$.next({
+            id: '',
+            type: EventType.SCALE_CHANGED,
+            receiver: ReceiverType.EMPTY
+        });
+    }
+
+    decScale(): void {
+        this.currentStep++;
+
+        this.events$.next({
+            id: '',
+            type: EventType.SCALE_CHANGED,
+            receiver: ReceiverType.EMPTY
+        });
+    }
+
+    decScaleEnabled(): boolean {
+        return this.currentStep < this.steps.length - 1;
+    }
+
+    incScaleEnabled(): boolean {
+        return this.currentStep > 0;
+    }
+
+    isCurrentHour(time: string): boolean {
+        return this.currentHour != null && time.startsWith(this.currentHour + '');
+    }
+
     clickEmptyCell(id: string, sectionId: string, assignmentId: string, offset: number, time: string, step: number, shiftKey: boolean): void {
         const assignment = this.findAssigment(assignmentId);
 
@@ -563,32 +500,114 @@ export class AppDataProvider extends DataProvider {
 
     }
 
-    incScale(): void {
-        this.currentStep--;
+    override clickMark(markId: string) {
+        const marks = this.sections.flatMap(s => s.assignments.flatMap(a => a.marks));
 
-        this.events$.next({
-            id: '',
-            type: EventType.SCALE_CHANGED,
-            receiver: ReceiverType.EMPTY
-        });
-    }
+        const parent = marks.find(m => m.marks && m.marks.some(sm => sm.id === markId));
 
-    decScale(): void {
-        this.currentStep++;
+        const assignment = this.findAssignmentByMark(markId);
 
-        this.events$.next({
-            id: '',
-            type: EventType.SCALE_CHANGED,
-            receiver: ReceiverType.EMPTY
-        });
-    }
+        const markMainFunc = (markFunc: (mark: Mark) => void, after?: (markState: MarkState) => void) => {
+            if (!parent) {
+                const mark = marks.find(m => m.id == markId);
 
-    decScaleEnabled(): boolean {
-        return this.currentStep < this.steps.length - 1;
-    }
+                if (mark) {
+                    const markState = mark.state;
 
-    incScaleEnabled(): boolean {
-        return this.currentStep > 0;
+                    markFunc(mark);
+
+                    if (after) {
+                        after(markState);
+                    }
+                }
+            } else {
+                if (parent.marks && parent.marks.length > 0) {
+                    const markState = parent.marks[0].state;
+
+                    parent.marks.forEach(m => {
+                        markFunc(m);
+                    })
+
+                    if (after) {
+                        after(markState);
+                    }
+                }
+            }
+        };
+
+        if (assignment) {
+            switch (assignment.state) {
+                case AssignmentState.CREATED_NOT_SAVED: {
+                    markMainFunc((mark) => {
+                        if (mark && mark.state === MarkState.CREATED_NOT_SAVED) {
+                            this.deleteMark(assignment, mark);
+                            // assignment.marks.splice(assignment.marks.indexOf(mark), 1);
+
+                            setTimeout(() => {
+                                this.events$.next({
+                                    id: mark.id,
+                                    type: EventType.NEW_MARK_CANCELED,
+                                    assignmentId: assignment.id,
+                                    offset: mark.offset,
+                                } as NewMarkCanceledEvent);
+                            })
+                        }
+                    });
+
+                    break;
+                }
+
+                case AssignmentState.EDITED:
+                case AssignmentState.AUTO_EDITED: {
+                    markMainFunc((mark) => {
+                        switch (mark.state) {
+                            case MarkState.CREATED_NOT_SAVED: {
+                                this.deleteMark(assignment, mark);
+                                break;
+                            }
+                            case MarkState.NORMAL: {
+                                mark.state = MarkState.CANCELED_NOT_SAVED;
+                                break;
+                            }
+                            case MarkState.CANCELED_NOT_SAVED: {
+                                mark.state = MarkState.NORMAL;
+                                break;
+                            }
+                        }
+                    }, (markState) => {
+                        if (assignment.state === AssignmentState.AUTO_EDITED) {
+                            if (this.findAllMarksByAssignment(assignment.id)
+                                .every(m => m.state != MarkState.CREATED_NOT_SAVED
+                                    && m.state != MarkState.CANCELED_NOT_SAVED)) {
+                                this.cancelEditRow(assignment.id);
+                            }
+                        }
+                    });
+
+                    break;
+                }
+
+                case AssignmentState.NORMAL: {
+                    this.editRow(assignment.id, true);
+
+                    markMainFunc((mark) => {
+                        switch (mark.state) {
+                            case MarkState.NORMAL: {
+                                mark.state = MarkState.CANCELED_NOT_SAVED;
+                                break;
+                            }
+                            case MarkState.CANCELED_NOT_SAVED: {
+                                mark.state = MarkState.NORMAL;
+                                break;
+                            }
+                        }
+                    });
+
+                    break;
+                }
+            }
+        }
+
     }
 
 }

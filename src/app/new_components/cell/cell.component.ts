@@ -29,4 +29,5 @@ export class CellComponent extends CommonCellComponent implements OnInit {
     isCanceled(): boolean {
         return this.mark.state === MarkState.CANCELED_NOT_SAVED || this.mark.state === MarkState.CANCELED_SAVED;
     }
+
 }

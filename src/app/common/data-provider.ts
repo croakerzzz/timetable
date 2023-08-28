@@ -221,4 +221,6 @@ export abstract class DataProvider {
                     .flatMap(a => a.marks.flatMap(m => m.marks || []))));
     }
 
+    abstract get currentHour(): number | null;
+
 }

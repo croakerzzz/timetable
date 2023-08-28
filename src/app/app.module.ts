@@ -28,6 +28,7 @@ import {
 import {SectionTitleCommonComponent} from './new_components/common/section-title-common/section-title-common.component';
 import {SectionTitleComponent} from './new_components/section-title/section-title.component';
 import {FormsModule} from "@angular/forms";
+import {AppDataProvider} from "./common/app-data-provider";
 
 @NgModule({
     declarations: [
@@ -58,7 +59,7 @@ import {FormsModule} from "@angular/forms";
         ReactiveComponentModule,
         FormsModule
     ],
-    providers: [],
+    providers: [AppDataProvider],
     bootstrap: [AppComponent]
 })
 export class AppModule {

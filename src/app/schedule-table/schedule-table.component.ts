@@ -61,6 +61,9 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
             this.times.push(i + '');
         }
 
+        console.log(this.times);
+        console.log(this.gridCells);
+
         this.gridCellMinSize = this.dataProvider.steps[this.dataProvider.currentStep].gridCellMinSize;
     }
 
@@ -130,6 +133,11 @@ export class ScheduleTableComponent implements OnInit, AfterViewInit {
             this.dataProvider.steps[this.dataProvider.currentStep].minutes,
             $event.shiftKey
         );
+    }
+
+    isCurrentHour(time: string): boolean {
+        return this.dataProvider.currentHour != null
+            && Number.parseInt(time.substring(0, 2)) == (this.dataProvider.currentHour - 2 - Number.parseInt(this.zeroTime.substring(0, 2)));
     }
 
 }

@@ -14,3 +14,9 @@
 .time-table-row-assignment-mark p {
     background-color: red;
 }
+
+.canceled {
+    color: #ffb700;
+    font-size: 36px;
+}
+

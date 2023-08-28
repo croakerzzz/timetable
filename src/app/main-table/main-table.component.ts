@@ -152,8 +152,6 @@ export class MainTableComponent implements OnInit {
         },
     ]
 
-    appDataProvider = new AppDataProvider(this.sections);
-
     editor = false;
 
     mode: 'none' | 'new' | 'edit' = 'none';
@@ -166,7 +164,8 @@ export class MainTableComponent implements OnInit {
 
     newMarks: number[] = [];
 
-    constructor(private cdf: ChangeDetectorRef) {
+    constructor(public appDataProvider: AppDataProvider) {
+        this.appDataProvider.sections = this.sections;
     }
 
     ngOnInit(): void {

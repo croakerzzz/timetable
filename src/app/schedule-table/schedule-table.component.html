@@ -21,6 +21,7 @@
 
 <ng-template #scaleTitleRow let-row="row">
     <div *ngFor="let timeCell of times; let i = index;" class="time-cell"
+         [ngClass]="{'current-hour':isCurrentHour(timeCell)}"
          [style.grid-row-start]="row"
          [style.grid-row-end]="row"
          [style.grid-column-start]="i * dataProvider.stepCells + 2"
@@ -32,6 +33,7 @@
 
 <ng-template #timeTableRow let-row="row" let-sectionId="sectionId" let-assignmentId="assignmentId">
     <div *ngFor="let timeCell of times; let i = index;" class="time-cell"
+         [ngClass]="{'current-hour':isCurrentHour(timeCell)}"
          (click)="clickTimeCell($event, sectionId,
                     assignmentId,
                     i * dataProvider.stepCells)"
